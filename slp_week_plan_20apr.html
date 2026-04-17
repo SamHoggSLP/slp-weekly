@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SL Projects — Week Plan · 20 Apr</title>
+<style>
+  :root {
+    --bg: #f5f1ea;
+    --card: #ffffff;
+    --ink: #1a1a1a;
+    --ink-soft: #5a5550;
+    --mute: #8a8373;
+    --line: #e3ddd1;
+    --line-soft: #f0ebe0;
+    --red: #b02a2a;
+    --red-deep: #8a1f1f;
+    --red-wash: #fbeeee;
+    --accent-soft: #faf7f0;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    padding: 28px 16px 80px;
+    line-height: 1.5;
+    -webkit-text-size-adjust: 100%;
+  }
+  .wrap { max-width: 780px; margin: 0 auto; }
+
+  /* ============ HEADER ============ */
+  .brand-label {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--red);
+    margin-bottom: 10px;
+  }
+
+  header h1 {
+    font-size: 34px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    line-height: 1.15;
+    margin-bottom: 8px;
+  }
+  header .tagline {
+    font-size: 15px;
+    color: var(--ink-soft);
+    margin-bottom: 22px;
+  }
+
+  .rule {
+    border: 0;
+    border-top: 2px solid var(--red);
+    margin: 0 0 20px 0;
+  }
+
+  .meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 32px;
+    font-size: 14.5px;
+    color: var(--ink);
+    margin-bottom: 20px;
+  }
+  .meta-row .meta-item strong {
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .meta-row .meta-item .arrow {
+    color: var(--ink-soft);
+    margin: 0 4px;
+  }
+
+  /* ============ VALUES + PILLARS PILLS ============ */
+  .pill-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .pill-row:last-of-type { margin-bottom: 28px; }
+
+  .pill {
+    font-size: 13px;
+    font-weight: 600;
+    padding: 7px 16px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+  .pill.value {
+    background: var(--red);
+    color: #fff;
+    border: 1px solid var(--red);
+  }
+  .pill.pillar {
+    background: transparent;
+    color: var(--ink);
+    border: 1px solid var(--line);
+  }
+
+  /* ============ SECTION HEADERS ============ */
+  .section-title {
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--mute);
+    margin: 28px 0 12px;
+  }
+  .section-title .dot { color: var(--red); margin: 0 6px; }
+
+  /* ============ DAY BLOCKS (native <details>) ============ */
+  .day {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    margin-bottom: 10px;
+    overflow: hidden;
+  }
+
+  /* Remove the default triangle marker, we'll make our own */
+  .day > summary {
+    list-style: none;
+    padding: 16px 20px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 14px;
+    user-select: none;
+  }
+  .day > summary::-webkit-details-marker { display: none; }
+  .day > summary::marker { display: none; content: ''; }
+
+  .day > summary .label {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    flex: 1;
+    min-width: 0;
+  }
+  .day > summary .dow {
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+  .day > summary .date {
+    font-size: 13px;
+    color: var(--mute);
+  }
+  .day > summary .summary-text {
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    margin-left: 6px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .day-header-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+
+  /* location pill on the right side of day header */
+  .loc-pill {
+    font-size: 12px;
+    font-weight: 600;
+    padding: 5px 12px;
+    border-radius: 999px;
+    background: var(--red-wash);
+    color: var(--red-deep);
+    white-space: nowrap;
+  }
+
+  .chev {
+    font-size: 12px;
+    color: var(--mute);
+    transition: transform 0.2s ease;
+    display: inline-block;
+  }
+  .day[open] > summary .chev { transform: rotate(180deg); }
+
+  .day-body-inner {
+    padding: 4px 20px 20px;
+    border-top: 1px solid var(--line-soft);
+  }
+
+  /* ============ TASK ROWS ============ */
+  .task-group { margin-top: 16px; }
+  .task-group h4 {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--mute);
+    margin-bottom: 10px;
+  }
+
+  .task {
+    display: flex;
+    align-items: stretch;
+    margin: 6px 0;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* red left accent for highlighted items */
+  .task.accent { border-left: 3px solid var(--red); background: var(--red-wash); }
+
+  .task-marker {
+    width: 10px;
+    flex-shrink: 0;
+    background: #faf7f0;
+    border-right: 1px solid var(--line-soft);
+  }
+  .task.accent .task-marker { display: none; }
+
+  .task-body {
+    flex: 1;
+    padding: 12px 14px;
+    min-width: 0;
+  }
+  .task-title {
+    font-size: 14.5px;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.35;
+  }
+  .task.accent .task-title { color: var(--red-deep); }
+  .task-sub {
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    margin-top: 3px;
+    line-height: 1.45;
+  }
+
+  .task-tags {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 12px 14px 12px 0;
+    flex-wrap: nowrap;
+  }
+  .tag {
+    font-size: 11.5px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+  .tag.person {
+    background: var(--accent-soft);
+    color: var(--ink);
+    border: 1px solid var(--line);
+  }
+  .tag.location {
+    background: var(--red-wash);
+    color: var(--red-deep);
+  }
+
+  /* ============ CALLOUT ============ */
+  .callout {
+    background: #fbf3df;
+    border: 1px solid #ecd9a8;
+    border-left: 3px solid #c9a94a;
+    padding: 12px 14px;
+    border-radius: 6px;
+    font-size: 13.5px;
+    color: #4a4132;
+    margin: 12px 0 6px;
+  }
+  .callout strong { color: var(--ink); }
+
+  /* ============ FOLLOW-UPS BLOCK ============ */
+  .followups {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 18px 20px 22px;
+    margin-bottom: 20px;
+  }
+  .followups .task-group:first-child { margin-top: 4px; }
+
+  /* ============ FOOTER ============ */
+  footer {
+    text-align: center;
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+    font-size: 12px;
+    color: var(--mute);
+  }
+  footer .brand {
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: var(--red);
+    margin-bottom: 4px;
+  }
+
+  /* ============ RESPONSIVE ============ */
+  @media (max-width: 540px) {
+    header h1 { font-size: 28px; }
+    .task-tags { display: none; }
+    .task { flex-wrap: wrap; }
+    .day > summary .summary-text { display: none; }
+    .meta-row { gap: 6px 18px; font-size: 13.5px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ============ HEADER ============ -->
+  <header>
+    <div class="brand-label">SL PROJECTS — INTERNAL</div>
+    <h1>Week Plan — 20 Apr</h1>
+    <div class="tagline">Week ahead · Planning with Roy · Simple process. Refined outcomes.</div>
+    <hr class="rule">
+
+    <div class="meta-row">
+      <div class="meta-item"><strong>Date:</strong> Fri 17 Apr 2026</div>
+      <div class="meta-item"><strong>Main site:</strong> Caine's <span class="arrow">→</span> Millymumel <span class="arrow">→</span> Harwood</div>
+      <div class="meta-item"><strong>Team:</strong> Sam · Roy · Ben · Tom · Spud</div>
+    </div>
+
+    <div class="pill-row">
+      <span class="pill value">Elevate</span>
+      <span class="pill value">Passion</span>
+      <span class="pill value">Intent</span>
+      <span class="pill value">Consistency</span>
+    </div>
+    <div class="pill-row">
+      <span class="pill pillar">Brand</span>
+      <span class="pill pillar">Culture</span>
+      <span class="pill pillar">Client Journey</span>
+      <span class="pill pillar">Profitability</span>
+    </div>
+  </header>
+
+  <!-- ============ TODAY ============ -->
+  <div class="section-title">Today <span class="dot">·</span> Fri 17 Apr <span class="dot">·</span> Caine's</div>
+
+  <details class="day" open>
+    <summary>
+      <div class="label">
+        <span class="dow">Today</span><span class="date">17 Apr</span>
+        <span class="summary-text">Demo + screen build</span>
+      </div>
+      <div class="day-header-right">
+        <span class="loc-pill">Caine's</span>
+        <span class="chev">▼</span>
+      </div>
+    </summary>
+    <div class="day-body-inner">
+
+      <div class="task-group">
+        <h4>Demo</h4>
+        <div class="task">
+          <div class="task-marker"></div>
+          <div class="task-body"><div class="task-title">Roller door off</div></div>
+          <div class="task-tags"><span class="tag location">Caine's</span></div>
+        </div>
+        <div class="task">
+          <div class="task-marker"></div>
+          <div class="task-body"><div class="task-title">Patio off</div></div>
+          <div class="task-tags"><span class="tag location">Caine's</span></div>
+        </div>
+        <div class="task">
+          <div class="task-marker"></div>
+          <div class="task-body"><div class="task-title">Garage door off</div></div>
+          <div class="task-tags"><span class="tag location">Caine's</span></div>
+        </div>
+        <div class="task accent">
+          <div class="task-marker"></div>
+          <div class="task-body">
+            <div class="task-title">Chop pier — keep single pier on the end</div>
+            <div class="task-sub">Drop 1500mm of wall back from boundary edge</div>
+          </div>
+          <div class="task-tags"><span class="tag location">Caine's</span></div>
+        </div>
+        <div class="task">
+          <div class="task-marker"></div>
+          <div class="task-body">
+            <div class="task-title">Score skin both sides, push over</div>
+            <div class="task-sub">Grab electric Diamond Hire on the way — good for dust</div>
+          </div>
+          <div class="task-tags"><span class="tag person">Sam</span><span class="tag location">Diamond Hire</span></div>
+        </div>
+        <div class="task">
+          <div class="task-marker"></div>
+          <div class="task-body"><div class="task-title">Stack bricks on site for re-use</div></div>
+          <div class="task-tags"><span class="tag location">Caine's</span></div>
+        </div>
+      </div>
+
+      <div class="task-group">
+        <h4>Site security</h4>
+        <div class="task">
+          <div class="task-marker"></div>
+          <div class="task-body">
+            <div class="task-title">Take 3 fence panels down</div>
+            <div class="task-sub">Only 2 at Pound — grab more if short</div>
+          </div>
+          <div class="task-tags"><span class="tag location">Pound</span></div>
+        </div>
+      </div>
+
+      <div class="task-group">
+        <h4>Screen (if time)</h4>
+        <div class="task accent">
+          <div class="task-marker"></div>
+          <div class="task-body">
+            <div class="task-title">Build screen off deck — 900mm walkway (600 + 300)</div>
+            <div class="task-sub">Footing + post, tie to deck for rigidity · Grab 90×90 from yard if available</div>
+          </div>
+          <div class="task-tags"><span class="tag location">Caine's</span></div>
+        </div>
+      </div>
+
+      <div class="task-group">
+        <h4>Coordinate</h4>
+        <div class="task">
+          <div class="task-marker"></div>
+          <div class="task-body">
+            <div class="task-title">Text Aaron — electrical disconnect</div>
+            <div class="task-sub">Wall lights + laser light · mostly external conduit</div>
+          </div>
+          <div class="task-tags"><span class="tag person">Sam</span></div>
+        </div>
+        <div class="task">
+          <div class="task-marker"></div>
+          <div class="task-body"><div class="task-title">Photo service points before demo</div></div>
+          <div class="task-tags"><span class="tag person">Sam</span></div>
+        </div>
+      </div>
+
+    </div>
+  </details>
+
+  <!-- ============ NEXT WEEK ============ -->
+  <div class="section-title">Next Week <span class="dot">·</span> Caine's</div>
+
+  <details class="day">
+    <summary>
+      <div class="label">
+        <span class="dow">Mon</span><span class="date">20 Apr</span>
+        <span class="summary-text">Meriwa + material orders</span>
+      </div>
+      <div class="day-header-right">
+        <span class="loc-pill">Meriwa</span>
+        <span class="chev">▼</span>
+      </div>
+    </summary>
+    <div class="day-body-inner">
+
+      <div class="task-group">
+        <h4>On-site</h4>
+        <div class="task accent">
+          <div class="task-marker"></div>
+          <div class="task-body"><div class="task-title">Meriwa list — screens, besser, roof, conc cut</div></div>
+          <div class="task-tags"><span class="tag person">All</span><span class="tag location">Meriwa</span></div>
+        </div>
+        <div class="task">
+          <div class="task-marker"></div>
+          <div class="task-body">
+            <div class="task-title">Fallback — if slow at Meriwa</div>
+            <div class="task-sub">Roy + Ben bounce · Tom + Spud plod along</div>
+          </div>
+          <div class="task-tags"><span class="tag location">Meriwa</span></div>
+        </div>
+      </div>
+
+      <div class="task-group">
+        <h4>Orders</h4>
+        <div class="task accent">
+          <div class="task-marker"></div>
+          <div class="task-body"><div class="task-title">Roof framing timber — order after Steve confirms</div></div>
+          <div class="task-tags"><span class="tag person">Sam</span></div>
+        </div>
+        <div class="task">
+          <div class="task-marker"></div>
+          <div class="task-body"><div class="task-title">6mm sheets — cladding + ceiling</div></div>
+          <div class="task-tags"><span class="tag person">Sam</span></div>
+        </div>
+      </div>
+
+    </div>
+  </details>
+
+  <details class="day">
+    <summary>
+      <div class="label">
+        <span class="dow">Tue</span><span class="date">21 Apr</span>
+        <span class="summary-text">Conc move + footing move</span>
+      </div>
+      <div class="day-header-right">
+        <span class="loc-pill">Caine's</span>
+        <span class="chev">▼</span>
+      </div>
+    </summary>
+    <div class="day-body-inner">
+
+      <div class="task-group">
+        <h4>Concrete</h4>
+        <div class="task accent">
+          <div class="task-marker"></div>
+          <div class="task-body">
+            <div class="task-title">Conc cut — wet saw, day before</div>
+            <div class="task-sub">Cut line follows footing back to wall, not straight</div>
+          </div>
+          <div class="task-tags"><span class="tag location">Caine's</span></div>
+        </div>
+        <div class="task">
+          <div class="task-marker"></div>
+          <div class="task-body">
+            <div class="task-title">Conc move — stack for Caine's gambion walls</div>
+            <div class="task-sub">Photo existing layout before lift</div>
+          </div>
+          <div class="task-tags"><span class="tag location">Caine's</span></div>
+        </div>
+      </div>
+
+      <div class="task-group">
+        <h4>Footings</h4>
+        <div class="task">
+          <div class="task-marker"></div>
+          <div class="task-body"><div class="task-title">Footing move — shift footing under cut line</div></div>
+          <div class="task-tags"><span class="tag location">Caine's</span></div>
+        </div>
+        <div class="task accent">
+          <div class="task-marker"></div>
+          <div class="task-body">
+            <div class="task-title">Hire — dingo or mini-ex</div>
+            <div class="task-sub">Ideally back-to-back with conc cut</div>
+          </div>
+          <div class="task-tags"><span class="tag person">Sam</span></div>
+        </div>
+      </div>
+
+    </div>
+  </details>
+
+  <details class="day">
+    <summary>
+      <div class="label">
+        <span class="dow">Wed</span><span class="date">22 Apr</span>
+        <span class="summary-text">Roof build</span>
+      </div>
+      <div class="day-header-right">
+        <span class="loc-pill">Caine's</span>
+        <span class="chev">▼</span>
+      </div>
+    </summary>
+    <div class="day-body-inner">
+
+      <div class="task-group">
+        <h4>Frame</h4>
+        <div class="task">
+          <div class="task-marker"></div>
+          <div class="task-body"><div class="task-title">240×45 LVLs — across on the flat, not on the pitch</div></div>
+          <div class="task-tags"><span class="tag location">Caine's</span></div>
+        </div>
+        <div class="task">
+          <div class="task-marker"></div>
+          <div class="task-body"><div class="task-title">2×300 LVLs — internal double beams</div></div>
+          <div class="task-tags"><span class="tag location">Caine's</span></div>
+        </div>
+        <div class="task">
+          <div class="task-marker"></div>
+          <div class="task-body"><div class="task-title">2×240 LVLs — external, face the double up</div></div>
+          <div class="task-tags"><span class="tag location">Caine's</span></div>
+        </div>
+        <div class="task">
+          <div class="task-marker"></div>
+          <div class="task-body"><div class="task-title">200×35 LVLs — ceiling joists through middle, one extra</div></div>
+          <div class="task-tags"><span class="tag location">Caine's</span></div>
+        </div>
+      </div>
+
+      <div class="task-group">
+        <h4>Post</h4>
+        <div class="task accent">
+          <div class="task-marker"></div>
+          <div class="task-body">
+            <div class="task-title">Confirm 112×112 timber in corner</div>
+            <div class="task-sub">Pier carries the load — steel not needed · Gate runs past brick, bigger post fine</div>
+          </div>
+          <div class="task-tags"><span class="tag person">Sam</span></div>
+        </div>
+        <div class="task">
+          <div class="task-marker"></div>
+          <div class="task-body">
+            <div class="task-title">Pack post back ~30mm</div>
+            <div class="task-sub">So battens line up with the pier, not proud</div>
+          </div>
+          <div class="task-tags"><span class="tag location">Caine's</span></div>
+        </div>
+      </div>
+
+      <div class="task-group">
+        <h4>Parapet</h4>
+        <div class="task">
+          <div class="task-marker"></div>
+          <div class="task-body">
+            <div class="task-title">Extend up, 6mm wraps under with drip edge</div>
+            <div class="task-sub">Change: no more gyro cladding</div>
+          </div>
+          <div class="task-tags"><span class="tag location">Caine's</span></div>
+        </div>
+        <div class="task">
+          <div class="task-marker"></div>
+          <div class="task-body"><div class="task-title">Quarter-round gutter hidden behind</div></div>
+          <div class="task-tags"><span class="tag location">Caine's</span></div>
+        </div>
+        <div class="task">
+          <div class="task-marker"></div>
+          <div class="task-body"><div class="task-title">Rake battens to the top</div></div>
+          <div class="task-tags"><span class="tag location">Caine's</span></div>
+        </div>
+      </div>
+
+    </div>
+  </details>
+
+  <details class="day">
+    <summary>
+      <div class="label">
+        <span class="dow">Thu</span><span class="date">23 Apr</span>
+        <span class="summary-text">Cladding + ceiling lining</span>
+      </div>
+      <div class="day-header-right">
+        <span class="loc-pill">Caine's</span>
+        <span class="chev">▼</span>
+      </div>
+    </summary>
+    <div class="day-body-inner">
+
+      <div class="task-group">
+        <h4>Cladding</h4>
+        <div class="task">
+          <div class="task-marker"></div>
+          <div class="task-body"><div class="task-title">6mm negative detail — match the house</div></div>
+          <div class="task-tags"><span class="tag location">Caine's</span></div>
+        </div>
+        <div class="task">
+          <div class="task-marker"></div>
+          <div class="task-body"><div class="task-title">Battens — in line with pier, not proud</div></div>
+          <div class="task-tags"><span class="tag location">Caine's</span></div>
+        </div>
+      </div>
+
+      <div class="task-group">
+        <h4>Ceiling</h4>
+        <div class="task">
+          <div class="task-marker"></div>
+          <div class="task-body">
+            <div class="task-title">Layout — split down middle + 1200s across</div>
+            <div class="task-sub">~4.2m run</div>
+          </div>
+          <div class="task-tags"><span class="tag location">Caine's</span></div>
+        </div>
+        <div class="task accent">
+          <div class="task-marker"></div>
+          <div class="task-body">
+            <div class="task-title">Joist detail — rip 45mm off one side of each joist</div>
+            <div class="task-sub">Offset sheet dead centre → 80mm purchase per side · Don't do 35+35 — 45 one side only</div>
+          </div>
+          <div class="task-tags"><span class="tag location">Caine's</span></div>
+        </div>
+        <div class="task">
+          <div class="task-marker"></div>
+          <div class="task-body"><div class="task-title">Extra blocking through the middle for sheet joins</div></div>
+          <div class="task-tags"><span class="tag location">Caine's</span></div>
+        </div>
+      </div>
+
+    </div>
+  </details>
+
+  <details class="day">
+    <summary>
+      <div class="label">
+        <span class="dow">Fri</span><span class="date">24 Apr</span>
+        <span class="summary-text">Continue + besser if time</span>
+      </div>
+      <div class="day-header-right">
+        <span class="loc-pill">Caine's</span>
+        <span class="chev">▼</span>
+      </div>
+    </summary>
+    <div class="day-body-inner">
+
+      <div class="task-group">
+        <h4>Continue</h4>
+        <div class="task">
+          <div class="task-marker"></div>
+          <div class="task-body"><div class="task-title">Roof build continuation</div></div>
+          <div class="task-tags"><span class="tag location">Caine's</span></div>
+        </div>
+        <div class="task">
+          <div class="task-marker"></div>
+          <div class="task-body"><div class="task-title">Cladding + ceiling lining</div></div>
+          <div class="task-tags"><span class="tag location">Caine's</span></div>
+        </div>
+      </div>
+
+      <div class="task-group">
+        <h4>Besser retaining wall — behind deck</h4>
+        <div class="task">
+          <div class="task-marker"></div>
+          <div class="task-body"><div class="task-title">Lay straight onto existing slab (100mm, sound)</div></div>
+          <div class="task-tags"><span class="tag location">Caine's</span></div>
+        </div>
+        <div class="task">
+          <div class="task-marker"></div>
+          <div class="task-body"><div class="task-title">Epoxy starter bars, besser, then header blocks</div></div>
+          <div class="task-tags"><span class="tag location">Caine's</span></div>
+        </div>
+        <div class="task accent">
+          <div class="task-marker"></div>
+          <div class="task-body">
+            <div class="task-title">Timber post shoe-bolted to head block, long rails to pier</div>
+            <div class="task-sub">Match the other screen</div>
+          </div>
+          <div class="task-tags"><span class="tag location">Caine's</span></div>
+        </div>
+        <div class="task">
+          <div class="task-marker"></div>
+          <div class="task-body">
+            <div class="task-title">Height — match top of deck</div>
+            <div class="task-sub">So battens run consistent</div>
+          </div>
+          <div class="task-tags"><span class="tag location">Caine's</span></div>
+        </div>
+      </div>
+
+    </div>
+  </details>
+
+  <!-- ============ FROM 28TH ============ -->
+  <div class="section-title">From 28th <span class="dot">·</span> Millymumel + Harwood</div>
+
+  <details class="day">
+    <summary>
+      <div class="label">
+        <span class="dow">Tue</span><span class="date">28 Apr</span>
+        <span class="summary-text">Demo week — strip back</span>
+      </div>
+      <div class="day-header-right">
+        <span class="loc-pill">Millymumel</span>
+        <span class="chev">▼</span>
+      </div>
+    </summary>
+    <div class="day-body-inner">
+
+      <div class="callout">
+        <strong>Note:</strong> ANZAC Day falls Sat 25 Apr, observed Mon 27 Apr. First day back = Tue 28th (4-day week).
+      </div>
+
+      <div class="task-group">
+        <h4>Demo scope</h4>
+        <div class="task accent">
+          <div class="task-marker"></div>
+          <div class="task-body"><div class="task-title">Scaff — ARC + quick scaff booked</div></div>
+          <div class="task-tags"><span class="tag person">Sam</span></div>
+        </div>
+        <div class="task">
+          <div class="task-marker"></div>
+          <div class="task-body"><div class="task-title">Brickwork sub — booked</div></div>
+          <div class="task-tags"><span class="tag person">Sam</span></div>
+        </div>
+        <div class="task">
+          <div class="task-marker"></div>
+          <div class="task-body"><div class="task-title">Footings — confirmed + booked</div></div>
+          <div class="task-tags"><span class="tag person">Sam</span></div>
+        </div>
+        <div class="task">
+          <div class="task-marker"></div>
+          <div class="task-body"><div class="task-title">Stairwell down — by hand or excavator + tipper</div></div>
+          <div class="task-tags"><span class="tag location">Millymumel</span></div>
+        </div>
+        <div class="task">
+          <div class="task-marker"></div>
+          <div class="task-body"><div class="task-title">Strip sheets, purlins, laser light, milli mumbles</div></div>
+          <div class="task-tags"><span class="tag location">Millymumel</span></div>
+        </div>
+      </div>
+
+    </div>
+  </details>
+
+  <details class="day">
+    <summary>
+      <div class="label">
+        <span class="dow">TBC</span><span class="date">Week of 28+</span>
+        <span class="summary-text">Harwood St, Hilton — prep</span>
+      </div>
+      <div class="day-header-right">
+        <span class="loc-pill">Harwood</span>
+        <span class="chev">▼</span>
+      </div>
+    </summary>
+    <div class="day-body-inner">
+
+      <div class="task-group">
+        <h4>Prep</h4>
+        <div class="task">
+          <div class="task-marker"></div>
+          <div class="task-body"><div class="task-title">Site visit — walk through</div></div>
+          <div class="task-tags"><span class="tag person">Sam</span><span class="tag location">Harwood</span></div>
+        </div>
+        <div class="task accent">
+          <div class="task-marker"></div>
+          <div class="task-body">
+            <div class="task-title">Old slab — plan lift method</div>
+            <div class="task-sub">Excavator makes this easier</div>
+          </div>
+          <div class="task-tags"><span class="tag location">Harwood</span></div>
+        </div>
+        <div class="task">
+          <div class="task-marker"></div>
+          <div class="task-body"><div class="task-title">Boundary footings — scope TBC</div></div>
+          <div class="task-tags"><span class="tag location">Harwood</span></div>
+        </div>
+        <div class="task">
+          <div class="task-marker"></div>
+          <div class="task-body">
+            <div class="task-title">Steel install — forks or rope-sling, slew from centre</div>
+            <div class="task-sub">1.8T lift capacity · check rated load at reach</div>
+          </div>
+          <div class="task-tags"><span class="tag location">Harwood</span></div>
+        </div>
+      </div>
+
+    </div>
+  </details>
+
+  <!-- ============ FOLLOW-UPS ============ -->
+  <div class="section-title">Follow-ups <span class="dot">·</span> Open decisions</div>
+
+  <div class="followups">
+
+    <div class="task-group">
+      <h4>Confirm / order</h4>
+      <div class="task accent">
+        <div class="task-marker"></div>
+        <div class="task-body"><div class="task-title">Steve — confirm roof framing timber availability + lead time</div></div>
+        <div class="task-tags"><span class="tag person">Sam</span></div>
+      </div>
+      <div class="task">
+        <div class="task-marker"></div>
+        <div class="task-body"><div class="task-title">Order 6mm sheets — cladding + ceiling, needed Thursday</div></div>
+        <div class="task-tags"><span class="tag person">Sam</span></div>
+      </div>
+      <div class="task">
+        <div class="task-marker"></div>
+        <div class="task-body"><div class="task-title">Roof framing order — place once Steve confirms, before Monday</div></div>
+        <div class="task-tags"><span class="tag person">Sam</span></div>
+      </div>
+      <div class="task">
+        <div class="task-marker"></div>
+        <div class="task-body">
+          <div class="task-title">Corner post — confirm 112×112 timber with Caine</div>
+          <div class="task-sub">Pier carries load, steel not needed</div>
+        </div>
+        <div class="task-tags"><span class="tag person">Sam</span></div>
+      </div>
+      <div class="task">
+        <div class="task-marker"></div>
+        <div class="task-body"><div class="task-title">Posts black? — check if Caine wants painted before install</div></div>
+        <div class="task-tags"><span class="tag person">Sam</span></div>
+      </div>
+      <div class="task">
+        <div class="task-marker"></div>
+        <div class="task-body"><div class="task-title">Chem-set + Rio — buy-and-charge for besser starter bars</div></div>
+        <div class="task-tags"><span class="tag person">Sam</span></div>
+      </div>
+    </div>
+
+    <div class="task-group">
+      <h4>People to chase</h4>
+      <div class="task accent">
+        <div class="task-marker"></div>
+        <div class="task-body">
+          <div class="task-title">Door / gate guy — emailed two, no reply</div>
+          <div class="task-sub">Chase before gate track goes in</div>
+        </div>
+        <div class="task-tags"><span class="tag person">Sam</span></div>
+      </div>
+      <div class="task">
+        <div class="task-marker"></div>
+        <div class="task-body">
+          <div class="task-title">Aaron + Ben's boys — electrical disconnect</div>
+          <div class="task-sub">Wall lights + laser light · mostly external conduit</div>
+        </div>
+        <div class="task-tags"><span class="tag person">Sam</span></div>
+      </div>
+    </div>
+
+    <div class="task-group">
+      <h4>Millymumel prep</h4>
+      <div class="task">
+        <div class="task-marker"></div>
+        <div class="task-body">
+          <div class="task-title">Scaffolding — ARC + quick scaff quotes</div>
+          <div class="task-sub">Decide: straight scaff w/ one extension vs full back</div>
+        </div>
+        <div class="task-tags"><span class="tag person">Sam</span></div>
+      </div>
+      <div class="task">
+        <div class="task-marker"></div>
+        <div class="task-body"><div class="task-title">Brickwork — book sub</div></div>
+        <div class="task-tags"><span class="tag person">Sam</span></div>
+      </div>
+      <div class="task">
+        <div class="task-marker"></div>
+        <div class="task-body"><div class="task-title">Footings — confirm scope + dig method</div></div>
+        <div class="task-tags"><span class="tag person">Sam</span></div>
+      </div>
+    </div>
+
+    <div class="task-group">
+      <h4>Equipment call</h4>
+      <div class="task accent">
+        <div class="task-marker"></div>
+        <div class="task-body">
+          <div class="task-title">XT18 excavator — $18k, ~8 wk delivery, Kubota, 1.8T</div>
+          <div class="task-sub">Telescopic tracks · pays back in ~45 days across Caine's / Milly / Jaces / Harwood · Lion = cheaper casual-use alternative</div>
+        </div>
+        <div class="task-tags"><span class="tag person">Sam</span></div>
+      </div>
+      <div class="task">
+        <div class="task-marker"></div>
+        <div class="task-body"><div class="task-title">Tue hire — dingo or mini-ex for conc move + footing move</div></div>
+        <div class="task-tags"><span class="tag person">Sam</span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ============ FOOTER ============ -->
+  <footer>
+    <div class="brand">SL PROJECTS</div>
+    <div>Simple process. Refined outcomes.</div>
+  </footer>
+
+</div>
+
+</body>
+</html>
