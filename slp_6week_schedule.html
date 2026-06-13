@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SL Projects — Rolling 6-Week Schedule</title>
+<style>
+  :root {
+    --bg: #f5f1ea;
+    --card: #ffffff;
+    --ink: #1a1a1a;
+    --ink-soft: #5a5550;
+    --mute: #8a8373;
+    --line: #e3ddd1;
+    --red: #b02a2a;
+    --red-deep: #8a1f1f;
+    --red-wash: #fbeeee;
+
+    --slp: #2f5fa8;        --slp-wash: #eaf0fa;   --slp-deep: #214680;
+    --sub: #b02a2a;        --sub-wash: #fbeeee;   --sub-deep: #8a1f1f;
+    --mat: #2e7d4f;        --mat-wash: #e9f4ee;   --mat-deep: #1f5c39;
+    --det: #6b6358;        --det-wash: #f1ede5;   --det-deep: #4a4339;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg); color: var(--ink); padding: 24px 16px 80px; line-height: 1.5;
+  }
+  .wrap { max-width: 1180px; margin: 0 auto; }
+
+  .brand-label { font-size: 12px; font-weight: 700; letter-spacing: 2px; color: var(--red); margin-bottom: 10px; }
+  header h1 { font-size: 32px; font-weight: 700; letter-spacing: -0.5px; line-height: 1.15; margin-bottom: 6px; }
+  header .tagline { font-size: 15px; color: var(--ink-soft); margin-bottom: 18px; }
+  .rule { border: 0; border-top: 2px solid var(--red); margin: 0 0 18px 0; }
+
+  /* ===== window nav ===== */
+  .nav { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+  .nav .range { font-size: 15.5px; font-weight: 800; letter-spacing: -0.2px; min-width: 200px; }
+  .nav .behind { font-size: 12px; font-weight: 700; color: var(--red); background: var(--red-wash); padding: 4px 10px; border-radius: 999px; cursor: pointer; }
+
+  .toolbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 16px; }
+  .btn {
+    font-family: inherit; font-size: 13px; font-weight: 600; cursor: pointer;
+    padding: 9px 14px; border-radius: 8px; border: 1px solid var(--line);
+    background: var(--card); color: var(--ink); white-space: nowrap;
+  }
+  .btn:hover { border-color: var(--mute); }
+  .btn.primary { background: var(--red); color: #fff; border-color: var(--red); }
+  .btn.primary:hover { background: var(--red-deep); }
+  .btn.nav-btn { font-size: 16px; padding: 7px 13px; font-weight: 800; }
+  .toolbar .spacer { flex: 1; }
+  .hint { font-size: 12.5px; color: var(--mute); }
+
+  .legend { display: flex; flex-wrap: wrap; gap: 8px 14px; margin-bottom: 14px; }
+  .legend .item { display: flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 600; color: var(--ink-soft); }
+  .legend .swatch { width: 14px; height: 14px; border-radius: 4px; flex-shrink: 0; }
+  .sw-slp { background: var(--slp); } .sw-sub { background: var(--sub); }
+  .sw-mat { background: var(--mat); } .sw-det { background: var(--det); }
+  .legend .note { color: var(--mute); font-weight: 500; }
+
+  .filters { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 18px; }
+  .chip {
+    font-size: 12.5px; font-weight: 600; padding: 6px 13px; border-radius: 999px;
+    border: 1px solid var(--line); background: var(--card); color: var(--ink-soft); cursor: pointer; user-select: none;
+  }
+  .chip.active.f-slp { background: var(--slp); border-color: var(--slp); color: #fff; }
+  .chip.active.f-sub { background: var(--sub); border-color: var(--sub); color: #fff; }
+  .chip.active.f-mat { background: var(--mat); border-color: var(--mat); color: #fff; }
+  .chip.active.f-det { background: var(--det); border-color: var(--det); color: #fff; }
+
+  .board-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 6px; }
+  .board { min-width: 900px; }
+  .grid-row { display: grid; grid-template-columns: 150px 1fr; }
+
+  .week-head { display: grid; grid-template-columns: repeat(6, 1fr); }
+  .week-cell {
+    text-align: center; padding: 10px 6px; border-left: 1px solid var(--line);
+    font-size: 13px; font-weight: 700; color: var(--ink);
+  }
+  .week-cell.current { background: #fff6e8; }
+  .week-cell .wk-num { display: block; font-size: 10.5px; font-weight: 700; letter-spacing: 1px; color: var(--mute); margin-bottom: 2px; }
+  .week-cell.current .wk-num { color: #c47a1e; }
+  .week-cell .wk-tag { display: block; font-size: 10.5px; font-weight: 600; color: var(--red); margin-top: 3px; }
+  .corner { padding: 10px 8px; font-size: 10.5px; font-weight: 700; letter-spacing: 1px; color: var(--mute); align-self: end; text-transform: uppercase; }
+
+  .lane { border-top: 1px solid var(--line); }
+  .lane-label {
+    padding: 12px 10px 12px 12px; font-size: 13.5px; font-weight: 800; letter-spacing: 0.3px;
+    display: flex; align-items: flex-start; gap: 9px; color: var(--ink);
+    border-left: 5px solid var(--site, var(--mute)); background: #faf7f0;
+  }
+  .lane-label .jobnum {
+    flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%; background: var(--site, var(--mute));
+    color: #fff; font-size: 12px; font-weight: 800; text-align: center; line-height: 22px;
+  }
+  .lane-label small { display: block; font-weight: 500; color: var(--mute); font-size: 10.5px; letter-spacing: 0; margin-top: 1px; }
+
+  .track {
+    position: relative;
+    background-image: repeating-linear-gradient(90deg, var(--line) 0 1px, transparent 1px calc(100% / 6));
+    background-color: #fcfaf6; min-height: 60px;
+  }
+  .today-band { position: absolute; top: 0; bottom: 0; background: rgba(196,122,30,0.07); pointer-events: none; }
+
+  .bar {
+    position: absolute; top: 0; height: 50px;
+    border-radius: 8px; padding: 7px 9px; cursor: grab;
+    overflow: hidden; user-select: none; touch-action: none;
+    border: 1px solid; border-left-width: 4px; display: flex; flex-direction: column; justify-content: center; gap: 2px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  }
+  .bar:active { cursor: grabbing; }
+  .bar.dragging { opacity: 0.85; box-shadow: 0 6px 16px rgba(0,0,0,0.18); z-index: 30; }
+  .bar.done { opacity: 0.5; }
+  .bar.done .b-title { text-decoration: line-through; }
+  .bar.clip-left { border-top-left-radius: 0; border-bottom-left-radius: 0; border-left-style: dashed; }
+  .bar.clip-right { border-top-right-radius: 0; border-bottom-right-radius: 0; }
+  .bar .b-title { font-size: 12.5px; font-weight: 700; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .bar .b-meta { font-size: 10.5px; font-weight: 600; opacity: 0.8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .bar .handle { position: absolute; top: 0; right: 0; width: 13px; height: 100%; cursor: ew-resize; }
+
+  .bar.c-slp { background: var(--slp-wash); border-color: var(--slp); color: var(--slp-deep); }
+  .bar.c-sub { background: var(--sub-wash); border-color: var(--sub); color: var(--sub-deep); }
+  .bar.c-mat { background: var(--mat-wash); border-color: var(--mat); color: var(--mat-deep); }
+  .bar.c-det { background: var(--det-wash); border-color: var(--det); color: var(--det-deep); }
+
+  .summary { display: flex; flex-wrap: wrap; gap: 10px; margin: 22px 0 8px; }
+  .stat { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 12px 16px; min-width: 105px; }
+  .stat .n { font-size: 22px; font-weight: 800; line-height: 1; }
+  .stat .l { font-size: 11.5px; font-weight: 600; color: var(--mute); margin-top: 5px; letter-spacing: 0.5px; }
+  .stat.s-slp .n { color: var(--slp); } .stat.s-sub .n { color: var(--sub); }
+  .stat.s-mat .n { color: var(--mat); } .stat.s-det .n { color: var(--det); }
+
+  .overlay { position: fixed; inset: 0; background: rgba(26,22,18,0.45); display: none; align-items: center; justify-content: center; padding: 16px; z-index: 100; }
+  .overlay.open { display: flex; }
+  .modal { background: var(--card); border-radius: 14px; width: 100%; max-width: 440px; padding: 22px; max-height: 92vh; overflow-y: auto; }
+  .modal h3 { font-size: 18px; margin-bottom: 16px; }
+  .field { margin-bottom: 13px; }
+  .field label { display: block; font-size: 12px; font-weight: 700; letter-spacing: 0.5px; color: var(--ink-soft); margin-bottom: 5px; text-transform: uppercase; }
+  .field input, .field select, .field textarea {
+    width: 100%; font-family: inherit; font-size: 14px; color: var(--ink);
+    padding: 9px 11px; border: 1px solid var(--line); border-radius: 8px; background: #fff;
+  }
+  .field textarea { resize: vertical; min-height: 56px; }
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; }
+  .modal-actions { display: flex; gap: 8px; margin-top: 18px; }
+  .modal-actions .spacer { flex: 1; }
+  .btn.danger { color: var(--red-deep); border-color: #e8c9c9; }
+  .btn.danger:hover { background: var(--red-wash); }
+
+  footer { text-align: center; margin-top: 36px; padding-top: 18px; border-top: 1px solid var(--line); font-size: 12px; color: var(--mute); }
+  footer .brand { font-weight: 700; letter-spacing: 1.5px; color: var(--red); margin-bottom: 4px; }
+
+  @media (max-width: 600px) { header h1 { font-size: 25px; } .hint.long { display: none; } }
+  @media print {
+    .toolbar, .filters, .hint, .nav .behind, .nav-btn, .overlay { display: none !important; }
+    body { background: #fff; padding: 0; } .board { min-width: 0; } .bar { box-shadow: none; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="brand-label">SL PROJECTS — INTERNAL</div>
+    <h1>Rolling 6-Week Schedule</h1>
+    <div class="tagline">Always planned 6 weeks out · Live working file · Simple process. Refined outcomes.</div>
+    <hr class="rule">
+  </header>
+
+  <div class="nav">
+    <button class="btn nav-btn" id="prevBtn" title="Look back a week">◀</button>
+    <span class="range" id="rangeLabel"></span>
+    <button class="btn nav-btn" id="nextBtn" title="Roll forward a week">▶</button>
+    <button class="btn" id="todayBtn">This week</button>
+    <span class="behind" id="behindBadge" style="display:none"></span>
+  </div>
+
+  <div class="toolbar">
+    <button class="btn primary" id="addBtn">+ Add task</button>
+    <button class="btn" id="pullBtn" title="Bring unfinished past tasks into the current week">Pull unfinished →</button>
+    <button class="btn" id="printBtn">Print</button>
+    <button class="btn" id="exportBtn">Export</button>
+    <button class="btn" id="importBtn">Import</button>
+    <button class="btn" id="resetBtn">Reset to board</button>
+    <span class="spacer"></span>
+    <span class="hint long">▶ rolls the window forward a week · drag a card to move weeks · drag its edge to stretch · tap to edit</span>
+  </div>
+
+  <div class="legend">
+    <div class="item"><span class="swatch sw-slp"></span> SLP Labour</div>
+    <div class="item"><span class="swatch sw-sub"></span> Subcontractor</div>
+    <div class="item"><span class="swatch sw-mat"></span> Material / Order</div>
+    <div class="item"><span class="swatch sw-det"></span> Detail / Decision</div>
+    <div class="item note">Rows = jobs · faded = done · dashed edge = continues outside the window</div>
+  </div>
+
+  <div class="filters" id="filters">
+    <span class="chip f-slp active" data-cat="slp">SLP Labour</span>
+    <span class="chip f-sub active" data-cat="sub">Subs</span>
+    <span class="chip f-mat active" data-cat="mat">Materials</span>
+    <span class="chip f-det active" data-cat="det">Details</span>
+  </div>
+
+  <div class="board-scroll"><div class="board" id="board"></div></div>
+
+  <div class="summary" id="summary"></div>
+
+  <footer>
+    <div class="brand">SL PROJECTS</div>
+    <div>Saved to this device automatically · Export to share or back up</div>
+  </footer>
+</div>
+
+<!-- edit modal -->
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <h3 id="modalTitle">Edit task</h3>
+    <div class="field">
+      <label>Task</label>
+      <input type="text" id="f-title" placeholder="e.g. Footing dig + pour">
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Job (site)</label>
+        <select id="f-site"></select>
+      </div>
+      <div class="field">
+        <label>Type</label>
+        <select id="f-cat">
+          <option value="slp">SLP Labour</option>
+          <option value="sub">Subcontractor</option>
+          <option value="mat">Material / Order</option>
+          <option value="det">Detail / Decision</option>
+        </select>
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Start week</label>
+        <select id="f-start"></select>
+      </div>
+      <div class="field">
+        <label>Weeks long</label>
+        <select id="f-span">
+          <option value="1">1</option><option value="2">2</option><option value="3">3</option>
+          <option value="4">4</option><option value="5">5</option><option value="6">6</option>
+        </select>
+      </div>
+    </div>
+    <div class="field">
+      <label>Status</label>
+      <select id="f-status"><option value="todo">To do</option><option value="done">Done</option></select>
+    </div>
+    <div class="field">
+      <label>Notes</label>
+      <textarea id="f-note" placeholder="e.g. min 2×4 / book sub / confirm with Steve"></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="btn danger" id="deleteBtn">Delete</button>
+      <span class="spacer"></span>
+      <button class="btn" id="cancelBtn">Cancel</button>
+      <button class="btn primary" id="saveBtn">Save</button>
+    </div>
+  </div>
+</div>
+
+<input type="file" id="fileInput" accept="application/json" style="display:none">
+
+<script>
+const STORAGE_KEY = 'slp_6week_v3';
+const OLD_KEY = 'slp_6week_v2';
+const BASE_MONDAY = '2026-06-15';   // week 1 of the original whiteboard plan
+const WINDOW = 6;
+const DAYMS = 86400000;
+const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+const SITES = [
+  { id: 1, name: 'Milli',     color: '#2f8a8a' },
+  { id: 2, name: 'Meriwa',    color: '#6a4ca8' },
+  { id: 3, name: 'Kathleen',  color: '#c47a1e' },
+  { id: 4, name: 'Combwich',  color: '#a83c7a' },
+  { id: 5, name: 'Harwood',   color: '#3a6ea5' },
+  { id: 6, name: 'Job 6',     color: '#8a5a2a', sub: 'confirm site' },
+  { id: 0, name: 'General',   color: '#6b6358', sub: 'office / multi-site' },
+];
+
+// seeded off the whiteboards; start = week index from BASE_MONDAY
+const SEED = [
+  { title:'Corbel wall', site:1, cat:'slp', start:0, span:1 },
+  { title:'Roof frame back', site:1, cat:'slp', start:0, span:1 },
+  { title:'Eaves + box gutter', site:1, cat:'slp', start:0, span:1 },
+  { title:'Roof wrap', site:1, cat:'slp', start:0, span:1 },
+  { title:'Ceiling lining', site:1, cat:'slp', start:0, span:1 },
+  { title:'Brickwork', site:1, cat:'sub', start:0, span:1, note:'"Shoe" block — confirm job' },
+  { title:'Balustrade — measure/quote', site:1, cat:'sub', start:0, span:1 },
+  { title:'Render / texture — quote', site:1, cat:'sub', start:0, span:1 },
+  { title:'Stairs — measure/quote', site:1, cat:'sub', start:0, span:1 },
+  { title:'Strip drain — 18mm CFC', site:1, cat:'mat', start:0, span:1 },
+  { title:'Blueboard', site:1, cat:'mat', start:0, span:1 },
+  { title:'Fine texture', site:1, cat:'mat', start:0, span:1 },
+  { title:'Foam mould', site:1, cat:'mat', start:0, span:1 },
+  { title:'Ceiling lining (sheets)', site:1, cat:'mat', start:0, span:1 },
+  { title:'Insulation', site:1, cat:'mat', start:0, span:1 },
+  { title:'W/board roof transition', site:1, cat:'det', start:0, span:1 },
+  { title:'Deck to Ftex transition', site:1, cat:'det', start:0, span:1 },
+  { title:'Deck gutter', site:1, cat:'det', start:0, span:1 },
+
+  { title:'Blueboard + finetex', site:1, cat:'slp', start:1, span:1 },
+  { title:'WB corbel', site:1, cat:'slp', start:1, span:1 },
+  { title:'Batten fence', site:1, cat:'slp', start:1, span:1 },
+  { title:'Horse rod detail', site:1, cat:'slp', start:1, span:1, note:'min 2×4' },
+  { title:'Ceiling lining', site:3, cat:'slp', start:1, span:1 },
+  { title:'Maiken', site:2, cat:'sub', start:1, span:1, note:'Ace Landscapes — confirm job' },
+  { title:'Lower system', site:2, cat:'sub', start:1, span:1, note:'Ace Landscapes' },
+  { title:'Florentine bricks', site:2, cat:'sub', start:1, span:1, note:'Ace Landscapes' },
+  { title:'Slab info', site:2, cat:'sub', start:1, span:1, note:'Ace Landscapes' },
+  { title:'Garo angle', site:2, cat:'sub', start:1, span:1, note:'Ace Landscapes' },
+  { title:'Strip drainage', site:2, cat:'mat', start:1, span:1, note:'confirm job' },
+  { title:'Falls + waterproof', site:2, cat:'mat', start:1, span:1, note:'confirm job' },
+
+  { title:'Chase cladding', site:3, cat:'slp', start:2, span:1 },
+  { title:'Site scout', site:4, cat:'slp', start:2, span:1 },
+  { title:'Backfill / earthworks', site:1, cat:'slp', start:2, span:1 },
+  { title:'Deck gutter', site:1, cat:'slp', start:2, span:1 },
+  { title:'Maiken — roof mills', site:3, cat:'sub', start:2, span:1 },
+  { title:'Remix — texture', site:3, cat:'sub', start:2, span:1 },
+  { title:'Screening', site:1, cat:'sub', start:2, span:1 },
+  { title:'EOFY — invoicing / orders', site:0, cat:'det', start:2, span:1, note:'Close POs before 30 Jun' },
+
+  { title:'Harwood demo', site:5, cat:'slp', start:3, span:1 },
+  { title:'Footing dig + pour', site:5, cat:'slp', start:3, span:1 },
+  { title:'Subfloor close', site:5, cat:'slp', start:3, span:1 },
+  { title:'Deck build', site:5, cat:'slp', start:3, span:1 },
+  { title:'Plumber — soakwells / drainage', site:5, cat:'sub', start:3, span:1 },
+  { title:'Bennos', site:5, cat:'sub', start:3, span:1 },
+  { title:'Footing — reo', site:5, cat:'mat', start:3, span:1 },
+  { title:'Deck — frame', site:5, cat:'mat', start:3, span:1 },
+
+  { title:'Balcony decking', site:1, cat:'slp', start:4, span:1 },
+  { title:'Slab pour', site:5, cat:'slp', start:4, span:1 },
+  { title:'Fence build', site:6, cat:'slp', start:4, span:1 },
+  { title:'Concretor', site:5, cat:'sub', start:4, span:1 },
+  { title:'Brickworks', site:5, cat:'sub', start:4, span:1 },
+  { title:'Reo', site:5, cat:'mat', start:4, span:1 },
+  { title:'New Techwood (decking)', site:1, cat:'mat', start:4, span:1, note:'for balcony decking — confirm job' },
+
+  { title:'Wall frames', site:5, cat:'slp', start:5, span:1 },
+  { title:'Truss roof', site:5, cat:'slp', start:5, span:1 },
+  { title:'Wraps — pour / walls', site:5, cat:'slp', start:5, span:1 },
+  { title:'Laundry demo', site:6, cat:'slp', start:5, span:1 },
+  { title:'Brickwork', site:5, cat:'sub', start:5, span:1 },
+  { title:'Cabinet making', site:5, cat:'sub', start:5, span:1 },
+  { title:'Truss factory', site:5, cat:'sub', start:5, span:1 },
+  { title:'Timber — day / walls / trusses', site:5, cat:'mat', start:5, span:1 },
+  { title:'Pro / China order', site:5, cat:'mat', start:5, span:1 },
+];
+
+// ---------- date helpers ----------
+function ymd(d) { return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0'); }
+function parseYMD(s) { const [a,b,c] = s.split('-').map(Number); return new Date(a, b-1, c); }
+function addDays(d, n) { return new Date(d.getFullYear(), d.getMonth(), d.getDate() + n); }
+function mondayOf(d) { const day = d.getDay(); return addDays(d, -((day + 6) % 7)); }
+function weekDiff(a, b) { return Math.round((a - b) / (7 * DAYMS)); }
+function todayMonday() { return mondayOf(new Date()); }
+
+function weekRange(mon) {
+  const fri = addDays(mon, 4);
+  if (mon.getMonth() === fri.getMonth()) return mon.getDate() + '–' + fri.getDate() + ' ' + MONTHS[fri.getMonth()];
+  return mon.getDate() + ' ' + MONTHS[mon.getMonth()] + '–' + fri.getDate() + ' ' + MONTHS[fri.getMonth()];
+}
+function eofyTag(mon) {
+  const fri = addDays(mon, 4);
+  const eofy = new Date(mon.getFullYear(), 5, 30);
+  return (mon <= eofy && eofy <= fri) ? 'EOFY' : '';
+}
+
+// ---------- state ----------
+let tasks = [];
+let anchor = BASE_MONDAY;     // ymd of left edge of the window
+let activeFilters = { slp:true, sub:true, mat:true, det:true };
+let editingId = null;
+
+function uid() { return 'x' + Math.random().toString(36).slice(2, 9); }
+function anchorDate() { return parseYMD(anchor); }
+function taskIdx(t) { return weekDiff(parseYMD(t.week), anchorDate()); }
+
+function load() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) { const o = JSON.parse(raw); tasks = o.tasks || []; anchor = o.anchor || BASE_MONDAY; return; }
+    const old = localStorage.getItem(OLD_KEY);
+    if (old) { tasks = migrate(JSON.parse(old)); anchor = BASE_MONDAY; save(); return; }
+  } catch (e) {}
+  seed();
+}
+function migrate(arr) {
+  const base = parseYMD(BASE_MONDAY);
+  return arr.map(t => ({
+    id: t.id || uid(), title: t.title, site: t.site, cat: t.cat,
+    week: ymd(addDays(base, 7 * (t.start || 0))), span: t.span || 1,
+    note: t.note || '', status: t.status || 'todo'
+  }));
+}
+function seed() {
+  const base = parseYMD(BASE_MONDAY);
+  tasks = SEED.map(t => Object.assign({ id: uid(), note:'', status:'todo' }, t, {
+    week: ymd(addDays(base, 7 * t.start))
+  }));
+  tasks.forEach(t => delete t.start);
+  anchor = BASE_MONDAY;
+  save();
+}
+function save() { try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ anchor, tasks })); } catch (e) {} }
+
+function siteById(id) { return SITES.find(s => s.id === id) || SITES[SITES.length - 1]; }
+
+// pack non-overlapping tracks within a lane using {t, idx}
+function layoutLane(items) {
+  const tracks = []; const placed = [];
+  items.slice().sort((a, b) => a.idx - b.idx || b.t.span - a.t.span).forEach(it => {
+    const s = it.idx, e = it.idx + it.t.span;
+    let ti = tracks.findIndex(tr => tr.every(([ts, te]) => e <= ts || s >= te));
+    if (ti === -1) { ti = tracks.length; tracks.push([]); }
+    tracks[ti].push([s, e]);
+    placed.push({ t: it.t, idx: it.idx, track: ti });
+  });
+  return { placed, count: Math.max(tracks.length, 1) };
+}
+
+// ---------- render ----------
+const board = document.getElementById('board');
+
+function render() {
+  const aDate = anchorDate();
+  const weeks = [];
+  for (let i = 0; i < WINDOW; i++) { const m = addDays(aDate, 7 * i); weeks.push(m); }
+  const todayIdx = weekDiff(todayMonday(), aDate);
+
+  // range label + behind badge
+  document.getElementById('rangeLabel').textContent = weekRange(weeks[0]) + '  →  ' + weekRange(weeks[WINDOW - 1]);
+  const behind = document.getElementById('behindBadge');
+  if (todayIdx < 0) { behind.style.display = ''; behind.textContent = 'Window is behind today — jump to this week'; }
+  else if (todayIdx >= WINDOW) { behind.style.display = ''; behind.textContent = 'Window is ahead of today — back to this week'; }
+  else behind.style.display = 'none';
+
+  board.innerHTML = '';
+
+  // header
+  const headRow = document.createElement('div');
+  headRow.className = 'grid-row';
+  headRow.innerHTML = '<div class="corner">Job \\ Week</div>';
+  const wh = document.createElement('div');
+  wh.className = 'week-head';
+  weeks.forEach((m, i) => {
+    const c = document.createElement('div');
+    c.className = 'week-cell' + (i === todayIdx ? ' current' : '');
+    const tag = eofyTag(m) || (i === todayIdx ? 'THIS WK' : '');
+    c.innerHTML = `<span class="wk-num">WK ${i + 1}</span>${weekRange(m)}` + (tag ? `<span class="wk-tag">${tag}</span>` : '');
+    wh.appendChild(c);
+  });
+  headRow.appendChild(wh);
+  board.appendChild(headRow);
+
+  // lanes
+  SITES.forEach(site => {
+    const allForSite = tasks.filter(t => t.site === site.id);
+    if (allForSite.length === 0 && site.id !== 0) return;
+
+    const visible = allForSite
+      .filter(t => activeFilters[t.cat])
+      .map(t => ({ t, idx: taskIdx(t) }))
+      .filter(it => it.idx + it.t.span > 0 && it.idx < WINDOW);
+
+    const row = document.createElement('div');
+    row.className = 'grid-row lane';
+    row.style.setProperty('--site', site.color);
+
+    const label = document.createElement('div');
+    label.className = 'lane-label';
+    label.innerHTML = `<span class="jobnum">${site.id || '–'}</span><span>${esc(site.name)}` +
+      (site.sub ? `<small>${esc(site.sub)}</small>` : '') + `</span>`;
+    row.appendChild(label);
+
+    const track = document.createElement('div');
+    track.className = 'track';
+    if (todayIdx >= 0 && todayIdx < WINDOW) {
+      const band = document.createElement('div');
+      band.className = 'today-band';
+      band.style.left = (todayIdx / WINDOW * 100) + '%';
+      band.style.width = (100 / WINDOW) + '%';
+      track.appendChild(band);
+    }
+    const { placed, count } = layoutLane(visible);
+    track.style.minHeight = (count * 58 + 8) + 'px';
+    placed.forEach(p => track.appendChild(makeBar(p.t, p.idx, p.track)));
+
+    track.addEventListener('click', e => {
+      if (e.target !== track && !e.target.classList.contains('today-band')) return;
+      const rect = track.getBoundingClientRect();
+      const wk = Math.min(WINDOW - 1, Math.max(0, Math.floor(((e.clientX - rect.left) / rect.width) * WINDOW)));
+      openModal(null, site.id, wk);
+    });
+
+    row.appendChild(track);
+    board.appendChild(row);
+  });
+
+  renderSummary();
+}
+
+function makeBar(t, idx, trackIndex) {
+  const visStart = Math.max(idx, 0);
+  const visEnd = Math.min(idx + t.span, WINDOW);
+  const bar = document.createElement('div');
+  bar.className = 'bar c-' + t.cat + (t.status === 'done' ? ' done' : '') +
+    (idx < 0 ? ' clip-left' : '') + (idx + t.span > WINDOW ? ' clip-right' : '');
+  bar.style.left = (visStart / WINDOW * 100) + '%';
+  bar.style.width = 'calc(' + ((visEnd - visStart) / WINDOW * 100) + '% - 6px)';
+  bar.style.marginLeft = '3px';
+  bar.style.top = (trackIndex * 58 + 4) + 'px';
+  bar.dataset.id = t.id;
+  bar.innerHTML =
+    `<div class="b-title">${esc(t.title)}</div>` +
+    (t.note ? `<div class="b-meta">${esc(t.note)}</div>` : '') +
+    `<div class="handle"></div>`;
+  attachDrag(bar, t);
+  return bar;
+}
+
+function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[c])); }
+
+// ---------- drag + resize ----------
+function attachDrag(bar, t) {
+  const handle = bar.querySelector('.handle');
+  let mode = null, startX = 0, origIdx = 0, origSpan = 0, colW = 0, moved = false;
+
+  function down(e, m) {
+    e.preventDefault();
+    mode = m; moved = false; startX = e.clientX;
+    origIdx = taskIdx(t); origSpan = t.span;
+    colW = bar.parentElement.getBoundingClientRect().width / WINDOW;
+    bar.classList.add('dragging');
+    window.addEventListener('pointermove', move);
+    window.addEventListener('pointerup', up);
+  }
+  function move(e) {
+    const d = Math.round((e.clientX - startX) / colW);
+    if (Math.abs(e.clientX - startX) > 4) moved = true;
+    if (mode === 'move') {
+      let ni = Math.min(WINDOW - t.span, Math.max(0, origIdx + d));
+      bar.style.left = (Math.max(ni, 0) / WINDOW * 100) + '%';
+      bar._ni = ni;
+    } else {
+      let nsp = Math.min(12, Math.max(1, origSpan + d));
+      bar.style.width = 'calc(' + (Math.min(nsp, WINDOW - Math.max(origIdx, 0)) / WINDOW * 100) + '% - 6px)';
+      bar._nsp = nsp;
+    }
+  }
+  function up() {
+    bar.classList.remove('dragging');
+    window.removeEventListener('pointermove', move);
+    window.removeEventListener('pointerup', up);
+    if (moved) {
+      if (mode === 'move' && bar._ni != null) t.week = ymd(addDays(anchorDate(), 7 * bar._ni));
+      if (mode === 'resize' && bar._nsp != null) t.span = bar._nsp;
+      save(); render();
+    }
+    mode = null;
+  }
+  bar.addEventListener('pointerdown', e => { if (e.target === handle) return; down(e, 'move'); });
+  handle.addEventListener('pointerdown', e => { e.stopPropagation(); down(e, 'resize'); });
+  bar.addEventListener('click', () => { if (!moved) openModal(t.id); });
+}
+
+// ---------- summary ----------
+function renderSummary() {
+  const el = document.getElementById('summary');
+  const inWin = t => { const i = taskIdx(t); return i + t.span > 0 && i < WINDOW; };
+  const winTasks = tasks.filter(inWin);
+  const by = c => winTasks.filter(t => t.cat === c).length;
+  const past = tasks.filter(t => taskIdx(t) + t.span <= 0).length;
+  const ahead = tasks.filter(t => taskIdx(t) >= WINDOW).length;
+  const activeJobs = new Set(winTasks.filter(t => t.site !== 0).map(t => t.site)).size;
+  const data = [
+    { cls:'', n: activeJobs, l:'ACTIVE JOBS' },
+    { cls:'s-slp', n: by('slp'), l:'SLP TASKS' },
+    { cls:'s-sub', n: by('sub'), l:'SUB BOOKINGS' },
+    { cls:'s-mat', n: by('mat'), l:'MATERIAL ORDERS' },
+    { cls:'s-det', n: by('det'), l:'DETAILS OPEN' },
+    { cls:'', n: past, l:'PAST (PARKED)' },
+    { cls:'', n: ahead, l:'AHEAD (PARKED)' },
+  ];
+  el.innerHTML = data.map(d => `<div class="stat ${d.cls}"><div class="n">${d.n}</div><div class="l">${d.l}</div></div>`).join('');
+}
+
+// ---------- modal ----------
+const overlay = document.getElementById('overlay');
+const siteSel = document.getElementById('f-site');
+SITES.forEach(s => { const o = document.createElement('option'); o.value = s.id; o.textContent = (s.id ? s.id + ' · ' : '') + s.name; siteSel.appendChild(o); });
+
+function fillStartOptions(selectedWeek) {
+  const sel = document.getElementById('f-start');
+  sel.innerHTML = '';
+  const aDate = anchorDate();
+  let matched = false;
+  for (let i = 0; i < WINDOW; i++) {
+    const m = addDays(aDate, 7 * i);
+    const o = document.createElement('option');
+    o.value = ymd(m); o.textContent = 'WK ' + (i + 1) + ' (' + weekRange(m) + ')';
+    if (selectedWeek === ymd(m)) { o.selected = true; matched = true; }
+    sel.appendChild(o);
+  }
+  if (selectedWeek && !matched) {
+    const o = document.createElement('option');
+    o.value = selectedWeek; o.textContent = weekRange(parseYMD(selectedWeek)) + ' (outside window)';
+    o.selected = true; sel.insertBefore(o, sel.firstChild);
+  }
+}
+
+function openModal(id, presetSite, presetWeekIdx) {
+  editingId = id;
+  const t = id ? tasks.find(x => x.id === id) : null;
+  const presetWeek = ymd(addDays(anchorDate(), 7 * (presetWeekIdx || 0)));
+  document.getElementById('modalTitle').textContent = t ? 'Edit task' : 'Add task';
+  document.getElementById('f-title').value = t ? t.title : '';
+  document.getElementById('f-site').value = t ? t.site : (presetSite != null ? presetSite : 1);
+  document.getElementById('f-cat').value = t ? t.cat : 'slp';
+  fillStartOptions(t ? t.week : presetWeek);
+  document.getElementById('f-span').value = t ? t.span : 1;
+  document.getElementById('f-status').value = t ? (t.status || 'todo') : 'todo';
+  document.getElementById('f-note').value = t ? (t.note || '') : '';
+  document.getElementById('deleteBtn').style.display = t ? '' : 'none';
+  overlay.classList.add('open');
+  setTimeout(() => document.getElementById('f-title').focus(), 50);
+}
+function closeModal() { overlay.classList.remove('open'); editingId = null; }
+
+document.getElementById('saveBtn').addEventListener('click', () => {
+  const title = document.getElementById('f-title').value.trim();
+  if (!title) { document.getElementById('f-title').focus(); return; }
+  const data = {
+    title,
+    site: parseInt(document.getElementById('f-site').value, 10),
+    cat: document.getElementById('f-cat').value,
+    week: document.getElementById('f-start').value,
+    span: parseInt(document.getElementById('f-span').value, 10),
+    status: document.getElementById('f-status').value,
+    note: document.getElementById('f-note').value.trim(),
+  };
+  if (editingId) Object.assign(tasks.find(x => x.id === editingId), data);
+  else tasks.push(Object.assign({ id: uid() }, data));
+  save(); closeModal(); render();
+});
+document.getElementById('deleteBtn').addEventListener('click', () => {
+  if (editingId && confirm('Delete this task?')) {
+    tasks = tasks.filter(x => x.id !== editingId);
+    save(); closeModal(); render();
+  }
+});
+document.getElementById('cancelBtn').addEventListener('click', closeModal);
+overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
+
+// ---------- window nav ----------
+function setAnchor(d) { anchor = ymd(d); save(); render(); }
+document.getElementById('prevBtn').addEventListener('click', () => setAnchor(addDays(anchorDate(), -7)));
+document.getElementById('nextBtn').addEventListener('click', () => setAnchor(addDays(anchorDate(), 7)));
+document.getElementById('todayBtn').addEventListener('click', () => setAnchor(todayMonday()));
+document.getElementById('behindBadge').addEventListener('click', () => setAnchor(todayMonday()));
+
+document.getElementById('pullBtn').addEventListener('click', () => {
+  const target = ymd(anchorDate());  // current first week of the window
+  const due = tasks.filter(t => taskIdx(t) < 0 && t.status !== 'done');
+  if (!due.length) { alert('No unfinished tasks parked in past weeks.'); return; }
+  if (confirm('Pull ' + due.length + ' unfinished task(s) from past weeks into ' + weekRange(anchorDate()) + '?')) {
+    due.forEach(t => { t.week = target; });
+    save(); render();
+  }
+});
+
+// ---------- toolbar ----------
+document.getElementById('addBtn').addEventListener('click', () => openModal(null));
+document.getElementById('printBtn').addEventListener('click', () => window.print());
+document.getElementById('resetBtn').addEventListener('click', () => {
+  if (confirm('Reset back to the original whiteboard plan? This wipes your edits.')) { seed(); render(); }
+});
+document.getElementById('exportBtn').addEventListener('click', () => {
+  const blob = new Blob([JSON.stringify({ anchor, tasks }, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'slp-6week-' + new Date().toISOString().slice(0, 10) + '.json';
+  a.click();
+});
+document.getElementById('importBtn').addEventListener('click', () => document.getElementById('fileInput').click());
+document.getElementById('fileInput').addEventListener('change', e => {
+  const file = e.target.files[0]; if (!file) return;
+  const r = new FileReader();
+  r.onload = () => {
+    try {
+      const data = JSON.parse(r.result);
+      if (Array.isArray(data)) { tasks = migrate(data); anchor = BASE_MONDAY; }
+      else if (data && Array.isArray(data.tasks)) { tasks = data.tasks; anchor = data.anchor || BASE_MONDAY; }
+      else { alert('That file does not look like a schedule export.'); return; }
+      save(); render();
+    } catch (err) { alert('Could not read that file.'); }
+  };
+  r.readAsText(file); e.target.value = '';
+});
+
+document.getElementById('filters').addEventListener('click', e => {
+  const chip = e.target.closest('.chip'); if (!chip) return;
+  const c = chip.dataset.cat;
+  activeFilters[c] = !activeFilters[c];
+  chip.classList.toggle('active', activeFilters[c]);
+  render();
+});
+
+// ---------- go ----------
+load();
+render();
+</script>
+</body>
+</html>
