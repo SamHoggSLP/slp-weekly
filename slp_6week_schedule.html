@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SL Projects — 6-Week Schedule</title>
+<style>
+  :root {
+    --bg: #f5f1ea;
+    --card: #ffffff;
+    --ink: #1a1a1a;
+    --ink-soft: #5a5550;
+    --mute: #8a8373;
+    --line: #e3ddd1;
+    --line-soft: #f0ebe0;
+    --red: #b02a2a;
+    --red-deep: #8a1f1f;
+    --red-wash: #fbeeee;
+
+    /* category colours — mirror the whiteboard pens */
+    --slp: #2f5fa8;        --slp-wash: #eaf0fa;   --slp-deep: #214680;
+    --sub: #b02a2a;        --sub-wash: #fbeeee;   --sub-deep: #8a1f1f;
+    --mat: #2e7d4f;        --mat-wash: #e9f4ee;   --mat-deep: #1f5c39;
+    --det: #6b6358;        --det-wash: #f1ede5;   --det-deep: #4a4339;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    padding: 24px 16px 80px;
+    line-height: 1.5;
+  }
+  .wrap { max-width: 1180px; margin: 0 auto; }
+
+  /* ============ HEADER ============ */
+  .brand-label { font-size: 12px; font-weight: 700; letter-spacing: 2px; color: var(--red); margin-bottom: 10px; }
+  header h1 { font-size: 32px; font-weight: 700; letter-spacing: -0.5px; line-height: 1.15; margin-bottom: 6px; }
+  header .tagline { font-size: 15px; color: var(--ink-soft); margin-bottom: 18px; }
+  .rule { border: 0; border-top: 2px solid var(--red); margin: 0 0 18px 0; }
+
+  /* ============ TOOLBAR ============ */
+  .toolbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 16px; }
+  .btn {
+    font-family: inherit; font-size: 13px; font-weight: 600; cursor: pointer;
+    padding: 9px 14px; border-radius: 8px; border: 1px solid var(--line);
+    background: var(--card); color: var(--ink); white-space: nowrap;
+  }
+  .btn:hover { border-color: var(--mute); }
+  .btn.primary { background: var(--red); color: #fff; border-color: var(--red); }
+  .btn.primary:hover { background: var(--red-deep); }
+  .toolbar .spacer { flex: 1; }
+  .hint { font-size: 12.5px; color: var(--mute); }
+
+  /* ============ LEGEND ============ */
+  .legend { display: flex; flex-wrap: wrap; gap: 8px 14px; margin-bottom: 16px; }
+  .legend .item { display: flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 600; color: var(--ink-soft); }
+  .legend .swatch { width: 14px; height: 14px; border-radius: 4px; flex-shrink: 0; }
+  .sw-slp { background: var(--slp); } .sw-sub { background: var(--sub); }
+  .sw-mat { background: var(--mat); } .sw-det { background: var(--det); }
+  .legend .crewkey { color: var(--mute); font-weight: 500; }
+
+  /* filter chips */
+  .filters { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 18px; }
+  .chip {
+    font-size: 12.5px; font-weight: 600; padding: 6px 13px; border-radius: 999px;
+    border: 1px solid var(--line); background: var(--card); color: var(--ink-soft); cursor: pointer; user-select: none;
+  }
+  .chip.active.f-slp { background: var(--slp); border-color: var(--slp); color: #fff; }
+  .chip.active.f-sub { background: var(--sub); border-color: var(--sub); color: #fff; }
+  .chip.active.f-mat { background: var(--mat); border-color: var(--mat); color: #fff; }
+  .chip.active.f-det { background: var(--det); border-color: var(--det); color: #fff; }
+
+  /* ============ GRID ============ */
+  .board-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 6px; }
+  .board { min-width: 880px; }
+
+  .grid-row { display: grid; grid-template-columns: 132px 1fr; }
+
+  /* week header */
+  .week-head { display: grid; grid-template-columns: repeat(6, 1fr); }
+  .week-cell {
+    text-align: center; padding: 10px 6px; border-left: 1px solid var(--line);
+    font-size: 13px; font-weight: 700; color: var(--ink);
+  }
+  .week-cell .wk-num { display: block; font-size: 10.5px; font-weight: 700; letter-spacing: 1px; color: var(--mute); margin-bottom: 2px; }
+  .week-cell .wk-tag { display: block; font-size: 10.5px; font-weight: 600; color: var(--red); margin-top: 3px; }
+  .corner { padding: 10px 8px; font-size: 10.5px; font-weight: 700; letter-spacing: 1px; color: var(--mute); align-self: end; text-transform: uppercase; }
+
+  /* lanes */
+  .lane { border-top: 1px solid var(--line); }
+  .lane-label {
+    padding: 12px 10px; font-size: 12px; font-weight: 700; letter-spacing: 0.5px;
+    display: flex; align-items: flex-start; gap: 7px; color: var(--ink);
+  }
+  .lane-label .dot { width: 11px; height: 11px; border-radius: 3px; flex-shrink: 0; margin-top: 2px; }
+  .lane-label small { display: block; font-weight: 500; color: var(--mute); font-size: 10.5px; letter-spacing: 0; }
+  .lane.l-slp .lane-label { background: var(--slp-wash); } .lane.l-slp .dot { background: var(--slp); }
+  .lane.l-sub .lane-label { background: var(--sub-wash); } .lane.l-sub .dot { background: var(--sub); }
+  .lane.l-mat .lane-label { background: var(--mat-wash); } .lane.l-mat .dot { background: var(--mat); }
+  .lane.l-det .lane-label { background: var(--det-wash); } .lane.l-det .dot { background: var(--det); }
+
+  .track {
+    position: relative;
+    background-image: repeating-linear-gradient(90deg, var(--line) 0 1px, transparent 1px calc(100% / 6));
+    background-color: #fcfaf6;
+    min-height: 64px;
+  }
+
+  /* task bar */
+  .bar {
+    position: absolute; top: 0; height: 50px;
+    border-radius: 8px; padding: 7px 9px; cursor: grab;
+    overflow: hidden; user-select: none; touch-action: none;
+    border: 1px solid; display: flex; flex-direction: column; justify-content: center; gap: 2px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  }
+  .bar:active { cursor: grabbing; }
+  .bar.dragging { opacity: 0.85; box-shadow: 0 6px 16px rgba(0,0,0,0.18); z-index: 30; }
+  .bar .b-title { font-size: 12.5px; font-weight: 700; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .bar .b-meta { font-size: 10.5px; font-weight: 600; opacity: 0.85; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .bar .crew {
+    position: absolute; top: 5px; right: 6px; min-width: 17px; height: 17px; padding: 0 3px;
+    border-radius: 9px; font-size: 10.5px; font-weight: 800; line-height: 17px; text-align: center; color: #fff;
+  }
+  .bar .handle { position: absolute; top: 0; right: 0; width: 12px; height: 100%; cursor: ew-resize; }
+
+  .bar.c-slp { background: var(--slp-wash); border-color: var(--slp); color: var(--slp-deep); } .bar.c-slp .crew { background: var(--slp); }
+  .bar.c-sub { background: var(--sub-wash); border-color: var(--sub); color: var(--sub-deep); } .bar.c-sub .crew { background: var(--sub); }
+  .bar.c-mat { background: var(--mat-wash); border-color: var(--mat); color: var(--mat-deep); } .bar.c-mat .crew { background: var(--mat); }
+  .bar.c-det { background: var(--det-wash); border-color: var(--det); color: var(--det-deep); } .bar.c-det .crew { background: var(--det); }
+
+  /* ============ SUMMARY ============ */
+  .summary { display: flex; flex-wrap: wrap; gap: 10px; margin: 22px 0 8px; }
+  .stat { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 12px 16px; min-width: 120px; }
+  .stat .n { font-size: 22px; font-weight: 800; line-height: 1; }
+  .stat .l { font-size: 11.5px; font-weight: 600; color: var(--mute); margin-top: 5px; letter-spacing: 0.5px; }
+  .stat.s-slp .n { color: var(--slp); } .stat.s-sub .n { color: var(--sub); }
+  .stat.s-mat .n { color: var(--mat); } .stat.s-det .n { color: var(--det); }
+
+  /* ============ MODAL ============ */
+  .overlay { position: fixed; inset: 0; background: rgba(26,22,18,0.45); display: none; align-items: center; justify-content: center; padding: 16px; z-index: 100; }
+  .overlay.open { display: flex; }
+  .modal { background: var(--card); border-radius: 14px; width: 100%; max-width: 440px; padding: 22px; max-height: 92vh; overflow-y: auto; }
+  .modal h3 { font-size: 18px; margin-bottom: 16px; }
+  .field { margin-bottom: 13px; }
+  .field label { display: block; font-size: 12px; font-weight: 700; letter-spacing: 0.5px; color: var(--ink-soft); margin-bottom: 5px; text-transform: uppercase; }
+  .field input, .field select, .field textarea {
+    width: 100%; font-family: inherit; font-size: 14px; color: var(--ink);
+    padding: 9px 11px; border: 1px solid var(--line); border-radius: 8px; background: #fff;
+  }
+  .field textarea { resize: vertical; min-height: 56px; }
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; }
+  .modal-actions { display: flex; gap: 8px; margin-top: 18px; }
+  .modal-actions .spacer { flex: 1; }
+  .btn.danger { color: var(--red-deep); border-color: #e8c9c9; }
+  .btn.danger:hover { background: var(--red-wash); }
+
+  footer { text-align: center; margin-top: 36px; padding-top: 18px; border-top: 1px solid var(--line); font-size: 12px; color: var(--mute); }
+  footer .brand { font-weight: 700; letter-spacing: 1.5px; color: var(--red); margin-bottom: 4px; }
+
+  @media (max-width: 600px) {
+    header h1 { font-size: 25px; }
+    .hint.long { display: none; }
+  }
+  @media print {
+    .toolbar, .filters, .hint, .overlay { display: none !important; }
+    body { background: #fff; padding: 0; }
+    .board { min-width: 0; }
+    .bar { box-shadow: none; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="brand-label">SL PROJECTS — INTERNAL</div>
+    <h1>6-Week Project Schedule</h1>
+    <div class="tagline">Mon 15 Jun → Fri 24 Jul 2026 · Live working file · Simple process. Refined outcomes.</div>
+    <hr class="rule">
+  </header>
+
+  <div class="toolbar">
+    <button class="btn primary" id="addBtn">+ Add job</button>
+    <button class="btn" id="printBtn">Print</button>
+    <button class="btn" id="exportBtn">Export</button>
+    <button class="btn" id="importBtn">Import</button>
+    <button class="btn" id="resetBtn">Reset to board</button>
+    <span class="spacer"></span>
+    <span class="hint long">Drag a card sideways to move weeks · drag its right edge to stretch · tap to edit</span>
+  </div>
+
+  <div class="legend">
+    <div class="item"><span class="swatch sw-slp"></span> SLP Labour</div>
+    <div class="item"><span class="swatch sw-sub"></span> Subcontractor</div>
+    <div class="item"><span class="swatch sw-mat"></span> Material / Order</div>
+    <div class="item"><span class="swatch sw-det"></span> Detail / Decision</div>
+    <div class="item crewkey">● number = crew on site</div>
+  </div>
+
+  <div class="filters" id="filters">
+    <span class="chip f-slp active" data-cat="slp">SLP Labour</span>
+    <span class="chip f-sub active" data-cat="sub">Subs</span>
+    <span class="chip f-mat active" data-cat="mat">Materials</span>
+    <span class="chip f-det active" data-cat="det">Details</span>
+  </div>
+
+  <div class="board-scroll">
+    <div class="board" id="board"></div>
+  </div>
+
+  <div class="summary" id="summary"></div>
+
+  <footer>
+    <div class="brand">SL PROJECTS</div>
+    <div>Saved to this device automatically · Export to share or back up</div>
+  </footer>
+
+</div>
+
+<!-- edit modal -->
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <h3 id="modalTitle">Edit job</h3>
+    <div class="field">
+      <label>Job</label>
+      <input type="text" id="f-title" placeholder="e.g. Footing dig + pour">
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Category</label>
+        <select id="f-cat">
+          <option value="slp">SLP Labour</option>
+          <option value="sub">Subcontractor</option>
+          <option value="mat">Material / Order</option>
+          <option value="det">Detail / Decision</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Site</label>
+        <input type="text" id="f-site" placeholder="e.g. Harwood">
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Start week</label>
+        <select id="f-start"></select>
+      </div>
+      <div class="field">
+        <label>Weeks long</label>
+        <select id="f-span">
+          <option value="1">1</option><option value="2">2</option><option value="3">3</option>
+          <option value="4">4</option><option value="5">5</option><option value="6">6</option>
+        </select>
+      </div>
+    </div>
+    <div class="field">
+      <label>Crew on site (blank = none)</label>
+      <input type="number" id="f-crew" min="0" max="99" placeholder="e.g. 5">
+    </div>
+    <div class="field">
+      <label>Notes</label>
+      <textarea id="f-note" placeholder="e.g. min 2×4 / book sub / confirm with Steve"></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="btn danger" id="deleteBtn">Delete</button>
+      <span class="spacer"></span>
+      <button class="btn" id="cancelBtn">Cancel</button>
+      <button class="btn primary" id="saveBtn">Save</button>
+    </div>
+  </div>
+</div>
+
+<input type="file" id="fileInput" accept="application/json" style="display:none">
+
+<script>
+const STORAGE_KEY = 'slp_6week_v1';
+
+const WEEKS = [
+  { num: 'WK 1', label: '15–19 Jun',     tag: '' },
+  { num: 'WK 2', label: '22–26 Jun',     tag: '' },
+  { num: 'WK 3', label: '29 Jun–3 Jul',  tag: 'EOFY' },
+  { num: 'WK 4', label: '6–10 Jul',      tag: '' },
+  { num: 'WK 5', label: '13–17 Jul',     tag: '' },
+  { num: 'WK 6', label: '20–24 Jul',     tag: '' },
+];
+
+const LANES = [
+  { cat: 'slp', name: 'SLP Labour',  sub: 'in-house crew' },
+  { cat: 'sub', name: 'Subbies',     sub: 'booked trades' },
+  { cat: 'mat', name: 'Materials',   sub: 'orders / supply' },
+  { cat: 'det', name: 'Details',     sub: 'decisions to lock' },
+];
+
+// Seeded straight off the two whiteboards. id, title, cat, site, start (0-5), span, crew, note
+const SEED = [
+  // ---------- WK1  15–19 Jun  (Milly) ----------
+  { title: 'Corbel wall',            cat:'slp', site:'Milly', start:0, span:1, crew:1 },
+  { title: 'Roof frame back',        cat:'slp', site:'Milly', start:0, span:1, crew:1 },
+  { title: 'Eaves + box gutter',     cat:'slp', site:'Milly', start:0, span:1, crew:1 },
+  { title: 'Roof wrap',              cat:'slp', site:'Milly', start:0, span:1, crew:null },
+  { title: 'Ceiling lining',         cat:'slp', site:'Milly', start:0, span:1, crew:null },
+  { title: 'Brickwork',              cat:'sub', site:'Shoe',  start:0, span:1, crew:null },
+  { title: 'Balustrade — measure/quote', cat:'sub', site:'Shoe', start:0, span:1, crew:null },
+  { title: 'Render / texture — quote',    cat:'sub', site:'Shoe', start:0, span:1, crew:null },
+  { title: 'Stairs — measure/quote',      cat:'sub', site:'Shoe', start:0, span:1, crew:null },
+  { title: 'Strip drain — 18mm CFC', cat:'mat', site:'Milly', start:0, span:1, crew:null },
+  { title: 'Blueboard',              cat:'mat', site:'Milly', start:0, span:1, crew:null },
+  { title: 'Fine texture',           cat:'mat', site:'Milly', start:0, span:1, crew:null },
+  { title: 'Foam mould',             cat:'mat', site:'Milly', start:0, span:1, crew:null },
+  { title: 'Ceiling lining (sheets)',cat:'mat', site:'Milly', start:0, span:1, crew:null },
+  { title: 'Insulation',             cat:'mat', site:'Milly', start:0, span:1, crew:null },
+  { title: 'W/board roof transition',cat:'det', site:'Milly', start:0, span:1, crew:null },
+  { title: 'Deck to Ftex transition',cat:'det', site:'Milly', start:0, span:1, crew:null },
+  { title: 'Deck gutter',            cat:'det', site:'Milly', start:0, span:1, crew:null },
+
+  // ---------- WK2  22–26 Jun  (Milly / Marina / Kath) ----------
+  { title: 'Blueboard + finetex',    cat:'slp', site:'Milly', start:1, span:1, crew:1 },
+  { title: 'WB corbel',              cat:'slp', site:'Marina', start:1, span:1, crew:1 },
+  { title: 'Batten fence',           cat:'slp', site:'Kath',  start:1, span:1, crew:1 },
+  { title: 'Horse rod detail',       cat:'slp', site:'Kath',  start:1, span:1, crew:1, note:'min 2×4' },
+  { title: 'Ceiling lining',         cat:'slp', site:'Milly', start:1, span:1, crew:3 },
+  { title: 'Maiken',                 cat:'sub', site:'Ace Landscapes', start:1, span:1, crew:3 },
+  { title: 'Lower system',           cat:'sub', site:'Ace Landscapes', start:1, span:1, crew:null },
+  { title: 'Florentine bricks',      cat:'sub', site:'Ace Landscapes', start:1, span:1, crew:null },
+  { title: 'Slab info',              cat:'sub', site:'Ace Landscapes', start:1, span:1, crew:null },
+  { title: 'Garo angle',             cat:'sub', site:'Ace Landscapes', start:1, span:1, crew:null },
+  { title: 'Strip drainage',         cat:'mat', site:'Marina', start:1, span:1, crew:null },
+  { title: 'Falls + waterproof',     cat:'mat', site:'Marina', start:1, span:1, crew:null },
+
+  // ---------- WK3  29 Jun–3 Jul  (EOFY) ----------
+  { title: 'Chase cladding',         cat:'slp', site:'Milly', start:2, span:1, crew:3 },
+  { title: 'Site scout',             cat:'slp', site:'—',     start:2, span:1, crew:4 },
+  { title: 'Backfill / earthworks',  cat:'slp', site:'Harwood', start:2, span:1, crew:1 },
+  { title: 'Deck gutter',            cat:'slp', site:'Milly', start:2, span:1, crew:null },
+  { title: 'Maiken — roof mills',    cat:'sub', site:'Maiken', start:2, span:1, crew:3 },
+  { title: 'Remix — texture',        cat:'sub', site:'Remix', start:2, span:1, crew:3 },
+  { title: 'Screening',              cat:'sub', site:'—',     start:2, span:1, crew:1 },
+  { title: 'EOFY — invoicing / orders', cat:'det', site:'Office', start:2, span:1, crew:null, note:'Close off purchase orders before 30 Jun' },
+
+  // ---------- WK4  6–10 Jul  (Harwood) ----------
+  { title: 'Harwood demo',           cat:'slp', site:'Harwood', start:3, span:1, crew:5 },
+  { title: 'Footing dig + pour',     cat:'slp', site:'Harwood', start:3, span:1, crew:5 },
+  { title: 'Subfloor close',         cat:'slp', site:'Harwood', start:3, span:1, crew:5 },
+  { title: 'Deck build',             cat:'slp', site:'Harwood', start:3, span:1, crew:5 },
+  { title: 'Plumber — soakwells / drainage', cat:'sub', site:'Harwood', start:3, span:1, crew:null },
+  { title: 'Bennos',                 cat:'sub', site:'Harwood', start:3, span:1, crew:5 },
+  { title: 'Footing — reo',          cat:'mat', site:'Harwood', start:3, span:1, crew:null },
+  { title: 'Deck — frame',           cat:'mat', site:'Harwood', start:3, span:1, crew:null },
+
+  // ---------- WK5  13–17 Jul ----------
+  { title: 'Balcony decking',        cat:'slp', site:'Harwood', start:4, span:1, crew:1 },
+  { title: 'Slab pour',              cat:'slp', site:'Harwood', start:4, span:1, crew:5 },
+  { title: 'Fence build',            cat:'slp', site:'Harwood', start:4, span:1, crew:6 },
+  { title: 'Concretor',              cat:'sub', site:'Harwood', start:4, span:1, crew:null },
+  { title: 'Brickworks',             cat:'sub', site:'Harwood', start:4, span:1, crew:null },
+  { title: 'Reo',                    cat:'mat', site:'Harwood', start:4, span:1, crew:null },
+  { title: 'New Techwood (decking)', cat:'mat', site:'Harwood', start:4, span:1, crew:null },
+
+  // ---------- WK6  20–24 Jul ----------
+  { title: 'Wall frames',            cat:'slp', site:'Harwood', start:5, span:1, crew:5 },
+  { title: 'Truss roof',             cat:'slp', site:'Harwood', start:5, span:1, crew:5 },
+  { title: 'Wraps — pour / walls',   cat:'slp', site:'Harwood', start:5, span:1, crew:5 },
+  { title: 'Laundry demo',           cat:'slp', site:'Harwood', start:5, span:1, crew:6 },
+  { title: 'Brickwork',              cat:'sub', site:'Harwood', start:5, span:1, crew:null },
+  { title: 'Cabinet making',         cat:'sub', site:'Cabinetmaker', start:5, span:1, crew:null },
+  { title: 'Truss factory',          cat:'sub', site:'Truss factory', start:5, span:1, crew:null },
+  { title: 'Timber — day / walls / trusses', cat:'mat', site:'Harwood', start:5, span:1, crew:null },
+  { title: 'Pro / China order',      cat:'mat', site:'Harwood', start:5, span:1, crew:null },
+];
+
+// ---------- state ----------
+let tasks = [];
+let activeFilters = { slp:true, sub:true, mat:true, det:true };
+let editingId = null;
+
+function uid() { return 'x' + Math.random().toString(36).slice(2, 9); }
+
+function load() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) { tasks = JSON.parse(raw); return; }
+  } catch (e) {}
+  seed();
+}
+function seed() {
+  tasks = SEED.map(t => Object.assign({ id: uid(), note: '', crew: null }, t));
+  save();
+}
+function save() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks)); } catch (e) {}
+}
+
+// assign non-overlapping tracks within a lane
+function layoutLane(laneTasks) {
+  const tracks = []; // each = array of [start,end)
+  const placed = [];
+  laneTasks.slice().sort((a, b) => a.start - b.start || b.span - a.span).forEach(t => {
+    const s = t.start, e = t.start + t.span;
+    let ti = tracks.findIndex(tr => tr.every(([ts, te]) => e <= ts || s >= te));
+    if (ti === -1) { ti = tracks.length; tracks.push([]); }
+    tracks[ti].push([s, e]);
+    placed.push({ t, track: ti });
+  });
+  return { placed, count: Math.max(tracks.length, 1) };
+}
+
+// ---------- render ----------
+const board = document.getElementById('board');
+
+function render() {
+  board.innerHTML = '';
+
+  // header row
+  const headRow = document.createElement('div');
+  headRow.className = 'grid-row';
+  headRow.innerHTML = '<div class="corner">Lane \\ Week</div>';
+  const wh = document.createElement('div');
+  wh.className = 'week-head';
+  WEEKS.forEach(w => {
+    const c = document.createElement('div');
+    c.className = 'week-cell';
+    c.innerHTML = `<span class="wk-num">${w.num}</span>${w.label}` + (w.tag ? `<span class="wk-tag">${w.tag}</span>` : '');
+    wh.appendChild(c);
+  });
+  headRow.appendChild(wh);
+  board.appendChild(headRow);
+
+  // lanes
+  LANES.forEach(lane => {
+    if (!activeFilters[lane.cat]) return;
+    const row = document.createElement('div');
+    row.className = 'grid-row lane l-' + lane.cat;
+
+    const label = document.createElement('div');
+    label.className = 'lane-label';
+    label.innerHTML = `<span class="dot"></span><span>${lane.name}<small>${lane.sub}</small></span>`;
+    row.appendChild(label);
+
+    const track = document.createElement('div');
+    track.className = 'track';
+
+    const laneTasks = tasks.filter(t => t.cat === lane.cat);
+    const { placed, count } = layoutLane(laneTasks);
+    track.style.minHeight = (count * 58 + 8) + 'px';
+
+    placed.forEach(({ t, track: ti }) => {
+      track.appendChild(makeBar(t, ti));
+    });
+
+    // tap empty area to add into this lane
+    track.addEventListener('click', e => {
+      if (e.target !== track) return;
+      const rect = track.getBoundingClientRect();
+      const wk = Math.min(5, Math.max(0, Math.floor(((e.clientX - rect.left) / rect.width) * 6)));
+      openModal(null, lane.cat, wk);
+    });
+
+    row.appendChild(track);
+    board.appendChild(row);
+  });
+
+  renderSummary();
+}
+
+function makeBar(t, trackIndex) {
+  const bar = document.createElement('div');
+  bar.className = 'bar c-' + t.cat;
+  bar.style.left = (t.start / 6 * 100) + '%';
+  bar.style.width = 'calc(' + (t.span / 6 * 100) + '% - 6px)';
+  bar.style.marginLeft = '3px';
+  bar.style.top = (trackIndex * 58 + 4) + 'px';
+  bar.dataset.id = t.id;
+
+  const meta = [t.site && t.site !== '—' ? t.site : '', t.note].filter(Boolean).join(' · ');
+  bar.innerHTML =
+    `<div class="b-title">${esc(t.title)}</div>` +
+    (meta ? `<div class="b-meta">${esc(meta)}</div>` : '') +
+    (t.crew != null && t.crew !== '' ? `<span class="crew">${t.crew}</span>` : '') +
+    `<div class="handle"></div>`;
+
+  attachDrag(bar, t);
+  return bar;
+}
+
+function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[c])); }
+
+// ---------- drag + resize ----------
+function attachDrag(bar, t) {
+  const handle = bar.querySelector('.handle');
+  let mode = null, startX = 0, origStart = 0, origSpan = 0, colW = 0, moved = false;
+
+  function down(e, m) {
+    e.preventDefault();
+    mode = m;
+    moved = false;
+    startX = e.clientX;
+    origStart = t.start; origSpan = t.span;
+    colW = bar.parentElement.getBoundingClientRect().width / 6;
+    bar.classList.add('dragging');
+    window.addEventListener('pointermove', move);
+    window.addEventListener('pointerup', up);
+  }
+  function move(e) {
+    const d = Math.round((e.clientX - startX) / colW);
+    if (Math.abs(e.clientX - startX) > 4) moved = true;
+    if (mode === 'move') {
+      let ns = Math.min(6 - t.span, Math.max(0, origStart + d));
+      if (ns !== t.start) { t.start = ns; bar.style.left = (ns / 6 * 100) + '%'; }
+    } else {
+      let nsp = Math.min(6 - t.start, Math.max(1, origSpan + d));
+      if (nsp !== t.span) { t.span = nsp; bar.style.width = 'calc(' + (nsp / 6 * 100) + '% - 6px)'; }
+    }
+  }
+  function up() {
+    bar.classList.remove('dragging');
+    window.removeEventListener('pointermove', move);
+    window.removeEventListener('pointerup', up);
+    if (moved) { save(); render(); }
+    mode = null;
+  }
+
+  bar.addEventListener('pointerdown', e => { if (e.target === handle) return; down(e, 'move'); });
+  handle.addEventListener('pointerdown', e => { e.stopPropagation(); down(e, 'resize'); });
+  bar.addEventListener('click', e => { if (!moved) openModal(t.id); });
+}
+
+// ---------- summary ----------
+function renderSummary() {
+  const el = document.getElementById('summary');
+  const by = c => tasks.filter(t => t.cat === c);
+  const crewSum = by('slp').reduce((a, t) => a + (Number(t.crew) || 0), 0);
+  const data = [
+    { cls:'s-slp', n: by('slp').length, l:'SLP JOBS' },
+    { cls:'s-sub', n: by('sub').length, l:'SUB BOOKINGS' },
+    { cls:'s-mat', n: by('mat').length, l:'MATERIAL ORDERS' },
+    { cls:'s-det', n: by('det').length, l:'DETAILS OPEN' },
+    { cls:'', n: crewSum, l:'CREW-WEEKS (SLP)' },
+  ];
+  el.innerHTML = data.map(d => `<div class="stat ${d.cls}"><div class="n">${d.n}</div><div class="l">${d.l}</div></div>`).join('');
+}
+
+// ---------- modal ----------
+const overlay = document.getElementById('overlay');
+const startSel = document.getElementById('f-start');
+WEEKS.forEach((w, i) => { const o = document.createElement('option'); o.value = i; o.textContent = w.num + ' (' + w.label + ')'; startSel.appendChild(o); });
+
+function openModal(id, presetCat, presetWeek) {
+  editingId = id;
+  const t = id ? tasks.find(x => x.id === id) : null;
+  document.getElementById('modalTitle').textContent = t ? 'Edit job' : 'Add job';
+  document.getElementById('f-title').value = t ? t.title : '';
+  document.getElementById('f-cat').value = t ? t.cat : (presetCat || 'slp');
+  document.getElementById('f-site').value = t ? (t.site || '') : '';
+  document.getElementById('f-start').value = t ? t.start : (presetWeek || 0);
+  document.getElementById('f-span').value = t ? t.span : 1;
+  document.getElementById('f-crew').value = (t && t.crew != null) ? t.crew : '';
+  document.getElementById('f-note').value = t ? (t.note || '') : '';
+  document.getElementById('deleteBtn').style.display = t ? '' : 'none';
+  overlay.classList.add('open');
+  setTimeout(() => document.getElementById('f-title').focus(), 50);
+}
+function closeModal() { overlay.classList.remove('open'); editingId = null; }
+
+document.getElementById('saveBtn').addEventListener('click', () => {
+  const title = document.getElementById('f-title').value.trim();
+  if (!title) { document.getElementById('f-title').focus(); return; }
+  const crewVal = document.getElementById('f-crew').value;
+  const data = {
+    title,
+    cat: document.getElementById('f-cat').value,
+    site: document.getElementById('f-site').value.trim(),
+    start: parseInt(document.getElementById('f-start').value, 10),
+    span: parseInt(document.getElementById('f-span').value, 10),
+    crew: crewVal === '' ? null : parseInt(crewVal, 10),
+    note: document.getElementById('f-note').value.trim(),
+  };
+  if (data.start + data.span > 6) data.span = 6 - data.start;
+  if (editingId) {
+    Object.assign(tasks.find(x => x.id === editingId), data);
+  } else {
+    tasks.push(Object.assign({ id: uid() }, data));
+  }
+  save(); closeModal(); render();
+});
+document.getElementById('deleteBtn').addEventListener('click', () => {
+  if (editingId && confirm('Delete this job?')) {
+    tasks = tasks.filter(x => x.id !== editingId);
+    save(); closeModal(); render();
+  }
+});
+document.getElementById('cancelBtn').addEventListener('click', closeModal);
+overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
+
+// ---------- toolbar ----------
+document.getElementById('addBtn').addEventListener('click', () => openModal(null));
+document.getElementById('printBtn').addEventListener('click', () => window.print());
+document.getElementById('resetBtn').addEventListener('click', () => {
+  if (confirm('Reset back to the original whiteboard plan? This wipes your edits.')) { seed(); render(); }
+});
+document.getElementById('exportBtn').addEventListener('click', () => {
+  const blob = new Blob([JSON.stringify(tasks, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'slp-6week-' + new Date().toISOString().slice(0, 10) + '.json';
+  a.click();
+});
+document.getElementById('importBtn').addEventListener('click', () => document.getElementById('fileInput').click());
+document.getElementById('fileInput').addEventListener('change', e => {
+  const file = e.target.files[0]; if (!file) return;
+  const r = new FileReader();
+  r.onload = () => {
+    try {
+      const data = JSON.parse(r.result);
+      if (Array.isArray(data)) { tasks = data; save(); render(); }
+      else alert('That file does not look like a schedule export.');
+    } catch (err) { alert('Could not read that file.'); }
+  };
+  r.readAsText(file);
+  e.target.value = '';
+});
+
+// filter chips
+document.getElementById('filters').addEventListener('click', e => {
+  const chip = e.target.closest('.chip'); if (!chip) return;
+  const c = chip.dataset.cat;
+  activeFilters[c] = !activeFilters[c];
+  chip.classList.toggle('active', activeFilters[c]);
+  render();
+});
+
+// ---------- go ----------
+load();
+render();
+</script>
+</body>
+</html>
