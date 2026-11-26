@@ -1,31 +1,34 @@
 <title>Benchline Lab</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
-/* Layout: sticky top bar + tab strip; each view is a full-width work surface. Board scrolls sideways inside its own track. */
+/* Palette sampled from the lab: blue-grey mosaic tile, pale aqua, board-formed concrete, charcoal. Thin tracked Lato echoes the wordmark.
+   Layout: sticky top bar + tab strip; each view is a full-width work surface. Board scrolls sideways inside its own track. */
 :root{
-  --bg:#e7e6e3; --surface:#f6f6f4; --sunk:#dcdbd7; --ink:#2a2c2e; --muted:#67696b; --line:#cbc9c4;
-  --accent:#9cc9e4; --accent-ink:#17232c; --accent-soft:#dbeaf3; --accent-deep:#2f6f99;
-  --warn:#8f5a00; --warn-bg:#f6e8cc; --bad:#a8342c; --bad-bg:#f4dedb; --good:#2c6b4a; --good-bg:#dceade;
-  --display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --bg:#e3e2df; --surface:#f4f4f2; --sunk:#d7d5d1; --ink:#2f2e2d; --muted:#686764; --line:#c8c6c2;
+  --accent:#a9c2d6; --accent-ink:#2a2f34; --accent-soft:#dfe8ef; --accent-deep:#4c6c86; --aqua:#b4d2d2;
+  --warn:#8f5a00; --warn-bg:#f3e6cc; --bad:#a8342c; --bad-bg:#f2dedb; --good:#2c6b4a; --good-bg:#dbe8dd;
+  --display:"Lato", "Helvetica Neue", system-ui, sans-serif;
   --body:"Instrument Sans", "Segoe UI", system-ui, sans-serif;
   --mono:"JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
   --r:10px;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#1b1c1d; --surface:#252627; --sunk:#202122; --ink:#e9e8e5; --muted:#a4a39f; --line:#38393a;
-  --accent:#a3cfe8; --accent-ink:#14202a; --accent-soft:#233340; --accent-deep:#a9d4ec;
-  --warn:#f0b75e; --warn-bg:#352812; --bad:#ff8e84; --bad-bg:#3a1c1a; --good:#7fd1a6; --good-bg:#16291f; color-scheme:dark}}
+  --bg:#2f2e2d; --surface:#383738; --sunk:#333232; --ink:#eceae6; --muted:#a8a6a2; --line:#4a4949;
+  --accent:#b4d2d2; --accent-ink:#2f2e2d; --accent-soft:#3c4849; --accent-deep:#b4d2d2; --aqua:#b4d2d2;
+  --warn:#f0b75e; --warn-bg:#46391f; --bad:#ff958b; --bad-bg:#4a2b28; --good:#8fd6b0; --good-bg:#2b3f33; color-scheme:dark}}
 :root[data-theme="dark"]{
-  --bg:#1b1c1d; --surface:#252627; --sunk:#202122; --ink:#e9e8e5; --muted:#a4a39f; --line:#38393a;
-  --accent:#a3cfe8; --accent-ink:#14202a; --accent-soft:#233340; --accent-deep:#a9d4ec;
-  --warn:#f0b75e; --warn-bg:#352812; --bad:#ff8e84; --bad-bg:#3a1c1a; --good:#7fd1a6; --good-bg:#16291f; color-scheme:dark}
+  --bg:#2f2e2d; --surface:#383738; --sunk:#333232; --ink:#eceae6; --muted:#a8a6a2; --line:#4a4949;
+  --accent:#b4d2d2; --accent-ink:#2f2e2d; --accent-soft:#3c4849; --accent-deep:#b4d2d2; --aqua:#b4d2d2;
+  --warn:#f0b75e; --warn-bg:#46391f; --bad:#ff958b; --bad-bg:#4a2b28; --good:#8fd6b0; --good-bg:#2b3f33; color-scheme:dark}
 
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font:15px/1.5 var(--body)}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
-h1,h2,h3{font-family:var(--display);line-height:1.15;text-wrap:balance;margin:0}
+h1,h2,h3{font-family:var(--display);line-height:1.15;text-wrap:balance;margin:0;font-weight:400}
+h2{font-weight:300;letter-spacing:.14em;text-transform:uppercase}
+h3{font-weight:700;letter-spacing:.02em}
 h2{font-size:1.45rem}
 h3{font-size:1.05rem}
 .mono{font-family:var(--mono);font-size:.82em;letter-spacing:.01em}
@@ -41,7 +44,7 @@ header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background
 .bar{display:flex;align-items:center;gap:12px;padding-block:10px}
 .brand{display:flex;align-items:center;gap:10px;min-width:0}
 .mark{width:28px;height:28px;flex:none}
-.brand b{font-family:var(--display);font-size:1.2rem}
+.brand b{font-family:var(--display);font-weight:300;font-size:1.15rem;letter-spacing:.24em;text-transform:uppercase}
 .brand .lab{color:var(--muted);font-size:.85rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .bar .sp{flex:1}
 .iconbtn{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:6px 10px;font-size:.85rem}
@@ -72,7 +75,7 @@ main{padding-block:20px 60px;max-width:1400px;margin:0 auto}
 
 /* brief strip */
 .brief{display:flex;flex-wrap:wrap;gap:8px 20px;align-items:center;padding:12px 16px;margin-bottom:16px}
-.brief .stat b{font-family:var(--display);font-size:1.4rem;margin-right:6px}
+.brief .stat b{font-family:var(--display);font-weight:300;font-size:1.7rem;margin-right:6px}
 .brief .stat{color:var(--muted);font-size:.88rem}
 .brief .note{flex-basis:100%;font-size:.88rem;color:var(--muted);border-top:1px dashed var(--line);padding-top:8px}
 
@@ -80,7 +83,8 @@ main{padding-block:20px 60px;max-width:1400px;margin:0 auto}
 .toolbar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
 .toolbar input,.toolbar select{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:7px 10px;min-width:0}
 .board{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(230px,1fr);gap:12px;overflow-x:auto;padding-bottom:8px}
-.col{background:var(--sunk);border-radius:var(--r);padding:10px;min-height:200px}
+.col{background-color:var(--sunk);background-image:linear-gradient(color-mix(in srgb,var(--line) 55%,transparent) 1px,transparent 1px),linear-gradient(90deg,color-mix(in srgb,var(--line) 55%,transparent) 1px,transparent 1px);background-size:14px 14px;background-position:-1px -1px;border-radius:var(--r);padding:10px;min-height:200px}
+.col h3{background:var(--sunk);border-radius:6px;padding:4px 6px;margin:0 0 10px!important}
 .col h3{font-size:.78rem;font-family:var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--muted);display:flex;justify-content:space-between;margin:2px 4px 10px}
 .cards{display:flex;flex-direction:column;gap:8px}
 .card{display:block;width:100%;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px 11px;position:relative}
@@ -133,12 +137,12 @@ td input{width:5.5em;border:1px solid var(--line);background:var(--surface);bord
 .qlist{display:flex;flex-direction:column;gap:8px}
 .kpis{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
 .kpi{background:var(--sunk);border-radius:10px;padding:10px}
-.kpi b{display:block;font-family:var(--display);font-size:1.3rem}
+.kpi b{display:block;font-family:var(--display);font-weight:300;font-size:1.5rem}
 .kpi span{font-size:.78rem;color:var(--muted)}
 
 /* portal */
-.portalhead{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;background:var(--accent-soft);border-radius:var(--r);padding:16px;margin-bottom:16px}
-.portalhead h2{color:var(--accent-deep)}
+.portalhead{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;background-color:var(--accent-soft);background-image:linear-gradient(color-mix(in srgb,var(--accent) 16%,transparent) 1px,transparent 1px),linear-gradient(90deg,color-mix(in srgb,var(--accent) 16%,transparent) 1px,transparent 1px);background-size:16px 16px;border-radius:var(--r);padding:16px;margin-bottom:16px}
+.portalhead h2{color:var(--accent-deep);font-size:1.3rem}
 .pcase{padding:12px 0;border-bottom:1px solid var(--line)}
 .pcase:last-child{border-bottom:0}
 
@@ -162,7 +166,7 @@ pre.doc{white-space:pre-wrap;background:var(--sunk);border-radius:8px;padding:14
 <header class="top">
   <div class="wrap bar">
     <div class="brand">
-      <svg class="mark" viewBox="0 0 28 28" aria-hidden="true"><rect x="2" y="4" width="24" height="5" rx="2" fill="var(--accent)"/><rect x="2" y="11.5" width="17" height="5" rx="2" fill="var(--ink)"/><rect x="2" y="19" width="10" height="5" rx="2" fill="var(--muted)"/></svg>
+      <svg class="mark" viewBox="0 0 28 28" aria-hidden="true"><rect x="2.0" y="2.0" width="7.5" height="7.5" rx="1" fill="var(--accent)"/><rect x="10.5" y="2.0" width="7.5" height="7.5" rx="1" fill="var(--aqua)"/><rect x="19.0" y="2.0" width="7.5" height="7.5" rx="1" fill="var(--accent)"/><rect x="2.0" y="10.5" width="7.5" height="7.5" rx="1" fill="var(--aqua)"/><rect x="10.5" y="10.5" width="7.5" height="7.5" rx="1" fill="var(--accent)"/><rect x="19.0" y="10.5" width="7.5" height="7.5" rx="1" fill="var(--aqua)"/><rect x="2.0" y="19.0" width="7.5" height="7.5" rx="1" fill="var(--accent)"/><rect x="10.5" y="19.0" width="7.5" height="7.5" rx="1" fill="var(--aqua)"/><rect x="19.0" y="19.0" width="7.5" height="7.5" rx="1" fill="var(--accent)"/></svg>
       <b>Benchline</b><span class="lab" id="labname"></span>
     </div>
     <span class="sp"></span>
