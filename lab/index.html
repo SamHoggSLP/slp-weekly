@@ -161,19 +161,54 @@ pre.doc{white-space:pre-wrap;background:var(--sunk);border-radius:8px;padding:14
 .toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;font-weight:600;font-size:.9rem;z-index:20}
 .empty{color:var(--muted);font-size:.88rem;padding:10px 4px}
 @media (prefers-reduced-motion: no-preference){.card,.btn{transition:border-color .12s,background .12s}}
+/* v2 additions: tooth chart, lab slip, allocation */
+.chartwrap{overflow-x:auto;padding-bottom:2px}
+.chart{min-width:340px;display:flex;flex-direction:column;gap:6px}
+.chartrow{display:grid;grid-template-columns:repeat(8,minmax(18px,1fr)) 10px repeat(8,minmax(18px,1fr));gap:3px;align-items:end}
+.chartrow.lower{align-items:start}
+.chartlbl{display:flex;justify-content:space-between;font:600 .66rem var(--mono);letter-spacing:.1em;color:var(--muted);text-transform:uppercase}
+.tooth{aspect-ratio:3/4;min-width:0;padding:0;border:1px solid var(--line);background:var(--surface);border-radius:5px 5px 10px 10px;font:600 .66rem var(--mono);color:var(--muted);display:grid;place-items:center}
+.lower .tooth{border-radius:10px 10px 5px 5px}
+.tooth.m{aspect-ratio:4/4}
+.tooth.on,.tooth[aria-pressed="true"]{background:var(--accent);border-color:var(--accent-deep);color:var(--accent-ink)}
+span.tooth{cursor:default}
+.quote{display:flex;gap:6px 14px;flex-wrap:wrap;align-items:center;font-size:.88rem;padding:10px 12px;background:var(--sunk);border-radius:8px;margin-top:8px}
+.quote b{font-family:var(--display);font-size:1.15rem;font-weight:400}
+.missing{display:flex;flex-direction:column;gap:8px;padding:12px;border-radius:8px;background:var(--warn-bg);color:var(--warn);font-size:.88rem}
+.missing.ok{background:var(--good-bg);color:var(--good)}
+.slip{background:var(--surface);border:1px solid var(--ink);border-radius:4px;padding:18px;display:flex;flex-direction:column;gap:14px}
+.sliphead{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;border-bottom:2px solid var(--ink);padding-bottom:10px}
+.slipno{font:600 1.7rem/1.1 var(--mono);letter-spacing:.02em}
+.eyebrow{font:600 .68rem var(--mono);letter-spacing:.16em;color:var(--muted);text-transform:uppercase}
+.slipgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,170px),1fr));gap:8px 16px;font-size:.88rem}
+.slipgrid div span{display:block;font:600 .66rem var(--mono);letter-spacing:.1em;color:var(--muted);text-transform:uppercase}
+.stamp{border:2px solid var(--bad);color:var(--bad);font:700 .78rem var(--mono);padding:2px 8px;border-radius:4px;transform:rotate(-3deg);display:inline-block;letter-spacing:.1em}
+.box{display:inline-block;width:16px;height:16px;border:1.5px solid var(--ink);border-radius:3px;vertical-align:middle}
+.box.done{background:var(--ink)}
+.photos{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.photos img{width:84px;height:84px;object-fit:cover;border-radius:8px;border:1px solid var(--line)}
+.filebtn{position:relative;overflow:hidden}
+.filebtn input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.meter{height:8px;border-radius:4px;background:var(--line);overflow:hidden;min-width:80px}
+.meter i{display:block;height:100%;background:var(--accent-deep)}
+.meter.over i{background:var(--bad)}
+.skill{font-size:.72rem}
+td.c,th.c{text-align:center}
+td input[type=checkbox]{width:auto}
+.stagehint{font-size:.78rem;color:var(--muted);margin:-6px 4px 10px}
 </style>
 
 <header class="top">
   <div class="wrap bar">
     <div class="brand">
-      <svg class="mark" viewBox="0 0 28 28" aria-hidden="true"><rect x="2.0" y="2.0" width="7.5" height="7.5" rx="1" fill="var(--accent)"/><rect x="10.5" y="2.0" width="7.5" height="7.5" rx="1" fill="var(--aqua)"/><rect x="19.0" y="2.0" width="7.5" height="7.5" rx="1" fill="var(--accent)"/><rect x="2.0" y="10.5" width="7.5" height="7.5" rx="1" fill="var(--aqua)"/><rect x="10.5" y="10.5" width="7.5" height="7.5" rx="1" fill="var(--accent)"/><rect x="19.0" y="10.5" width="7.5" height="7.5" rx="1" fill="var(--aqua)"/><rect x="2.0" y="19.0" width="7.5" height="7.5" rx="1" fill="var(--accent)"/><rect x="10.5" y="19.0" width="7.5" height="7.5" rx="1" fill="var(--aqua)"/><rect x="19.0" y="19.0" width="7.5" height="7.5" rx="1" fill="var(--accent)"/></svg>
+      <svg class="mark" viewBox="0 0 28 28" aria-hidden="true"><rect x="2" y="2" width="7.5" height="7.5" rx="1" fill="var(--accent)"/><rect x="10.5" y="2" width="7.5" height="7.5" rx="1" fill="var(--aqua)"/><rect x="19" y="2" width="7.5" height="7.5" rx="1" fill="var(--accent)"/><rect x="2" y="10.5" width="7.5" height="7.5" rx="1" fill="var(--aqua)"/><rect x="10.5" y="10.5" width="7.5" height="7.5" rx="1" fill="var(--accent)"/><rect x="19" y="10.5" width="7.5" height="7.5" rx="1" fill="var(--aqua)"/><rect x="2" y="19" width="7.5" height="7.5" rx="1" fill="var(--accent)"/><rect x="10.5" y="19" width="7.5" height="7.5" rx="1" fill="var(--aqua)"/><rect x="19" y="19" width="7.5" height="7.5" rx="1" fill="var(--accent)"/></svg>
       <b>Benchline</b><span class="lab" id="labname"></span>
     </div>
     <span class="sp"></span>
     <button class="iconbtn" data-act="settings">Lab settings</button>
   </div>
   <nav class="tabs wrap" id="tabs">
-    <a href="#board">Cases</a><a href="#intake">Rx intake</a><a href="#bench">Bench</a><a href="#portal">Dentist portal</a><a href="#billing">Billing</a>
+    <a href="#board">Cases</a><a href="#intake">Rx intake</a><a href="#allocation">Allocation</a><a href="#bench">Bench</a><a href="#portal">Dentist portal</a><a href="#billing">Billing</a>
   </nav>
 </header>
 <main class="wrap" id="view"></main>
@@ -188,194 +223,306 @@ const iso=d=>{const x=new Date(d);return x.getFullYear()+'-'+String(x.getMonth()
 const TODAY=iso(new Date());
 const addDays=(s,n)=>{const d=new Date(s+'T00:00');d.setDate(d.getDate()+n);return iso(d)};
 const diff=(a,b)=>Math.round((new Date(a+'T00:00')-new Date(b+'T00:00'))/864e5);
+function addWD(s,n){const d=new Date(s+'T00:00');while(n>0){d.setDate(d.getDate()+1);const w=d.getDay();if(w>0&&w<6)n--}return iso(d)}
+function wdBetween(a,b){let n=0,d=new Date(a+'T00:00');const e=new Date(b+'T00:00');while(d<e){d.setDate(d.getDate()+1);const w=d.getDay();if(w>0&&w<6)n++}return n}
 const fmtD=s=>s?new Date(s+'T00:00').toLocaleDateString('en-AU',{weekday:'short',day:'numeric',month:'short'}):'';
 const fmtShort=s=>new Date(s+'T00:00').toLocaleDateString('en-AU',{day:'2-digit',month:'2-digit',year:'numeric'});
 const money=n=>(+n||0).toLocaleString('en-AU',{style:'currency',currency:'AUD'});
 const uid=()=>Math.random().toString(36).slice(2,9);
-function toast(m){const t=$('#toast');t.textContent=m;t.hidden=false;clearTimeout(toast.h);toast.h=setTimeout(()=>t.hidden=true,2200)}
+function toast(m){const t=$('#toast');t.textContent=m;t.hidden=false;clearTimeout(toast.h);toast.h=setTimeout(()=>t.hidden=true,2400)}
 
 /* ---------- domain ---------- */
-const STAGES=['Received','Design','Milling','Finishing','QC','Dispatched'];
-const PIECE={1:14,2:5,3:24,4:4};             // $ per unit credited when a stage is closed
-const STATION={0:'t4',1:'t1',2:'t2',3:'t3',4:'t4'}; // default owner per stage
+// Seven working stages plus Dispatched. Names are a first guess at the lab's floor; rename here once mapped.
+const STAGES=[
+  {k:'booked',n:'Booked'},{k:'received',n:'Received'},{k:'models',n:'Models & scan'},{k:'design',n:'Design'},
+  {k:'milling',n:'Mill / print'},{k:'ceramics',n:'Ceramics'},{k:'qc',n:'QC'},{k:'dispatched',n:'Dispatched'}];
+const DONE=STAGES.length-1;
+const SN=i=>STAGES[i].n;
+const SKILLS=[['received','Receiving'],['models','Models & scan'],['design','CAD design'],['implant','Implant design'],['milling','Mill / print'],['ceramics','Ceramics'],['anterior','Anterior aesthetics'],['qc','QC']];
+const FRAC={received:0,models:.15,design:.35,milling:.5,ceramics:.85,qc:1};   // share of turnaround each department should be finished by
+const PIECE={models:3,design:14,milling:5,ceramics:24,qc:4};
 const SHADES={A1:'#f2e9d4',A2:'#eddcbc',A3:'#e5cfa6','A3.5':'#dcc195',A4:'#cfb084',B1:'#f4ecd8',B2:'#eee0bf',B3:'#e3cd9f',C1:'#e4dbc5',C2:'#d9cdb0',C3:'#cdbf9f',D2:'#e3d6c0',D3:'#d8c8ac',BL1:'#faf7f0',BL2:'#f7f2e8'};
+// tat: [base working days, units included, +1 day per N extra units]
 const CATALOG={
-  'zr-crown':{name:'Zirconia crown',unit:'tooth',price:260,mat:'Monolithic zirconia'},
-  'emax-crown':{name:'IPS e.max crown',unit:'tooth',price:310,mat:'Lithium disilicate'},
-  'pfm-crown':{name:'PFM crown',unit:'tooth',price:285,mat:'Porcelain fused to non-precious alloy'},
-  'gold-crown':{name:'Full gold crown',unit:'tooth',price:680,mat:'Type III gold alloy'},
-  'impl-crown':{name:'Implant crown, screw-retained',unit:'tooth',price:540,mat:'Zirconia on titanium base'},
-  'zr-bridge':{name:'Zirconia bridge',unit:'unit',price:250,mat:'Monolithic zirconia'},
-  'inlay':{name:'Inlay / onlay',unit:'tooth',price:240,mat:'Lithium disilicate'},
-  'veneer':{name:'Veneer',unit:'tooth',price:330,mat:'Feldspathic porcelain'},
-  'full-denture':{name:'Full denture',unit:'arch',price:760,mat:'Heat-cured acrylic, acrylic teeth'},
-  'partial':{name:'Cobalt-chrome partial',unit:'arch',price:690,mat:'Cobalt-chromium framework, acrylic'},
-  'splint':{name:'Occlusal splint',unit:'arch',price:190,mat:'Hard heat-cured acrylic'}
+  'zr-crown':{name:'Zirconia crown',unit:'tooth',price:260,mat:'Monolithic zirconia',tat:[5,2,2],shade:1},
+  'emax-crown':{name:'IPS e.max crown',unit:'tooth',price:310,mat:'Lithium disilicate',tat:[5,2,2],shade:1},
+  'layered-crown':{name:'Layered zirconia crown',unit:'tooth',price:420,mat:'Zirconia core, layered porcelain',tat:[6,2,2],shade:1},
+  'gold-crown':{name:'Full gold crown',unit:'tooth',price:680,mat:'Type III gold alloy',tat:[6,2,2],shade:0},
+  'impl-crown':{name:'Implant crown, screw-retained',unit:'tooth',price:540,mat:'Zirconia on titanium base',tat:[8,1,2],shade:1},
+  'zr-bridge':{name:'Zirconia bridge',unit:'unit',price:250,mat:'Monolithic zirconia',tat:[6,3,2],shade:1},
+  'inlay':{name:'Inlay / onlay',unit:'tooth',price:240,mat:'Lithium disilicate',tat:[5,2,3],shade:1},
+  'veneer':{name:'Veneer',unit:'tooth',price:330,mat:'Feldspathic porcelain',tat:[7,2,2],shade:1},
+  'full-denture':{name:'Full denture',unit:'arch',price:760,mat:'Heat-cured acrylic, acrylic teeth',tat:[10,1,1],shade:1},
+  'splint':{name:'Occlusal splint',unit:'arch',price:190,mat:'Hard heat-cured acrylic',tat:[4,1,1],shade:0}
 };
-const units=it=>CATALOG[it.code].unit==='arch'?1:Math.max(1,it.teeth.length);
+const arches=teeth=>new Set(teeth.map(t=>t<30?'U':'L')).size;
+const units=it=>CATALOG[it.code].unit==='arch'?Math.max(1,arches(it.teeth)):Math.max(1,it.teeth.length);
+const isAnt=t=>t%10<=3;
+function turnaround(code,teeth,rush){
+  const u=units({code,teeth}), [b,inc,per]=CATALOG[code].tat;
+  let d=b+Math.max(0,Math.ceil((u-inc)/per)); if(rush)d=Math.max(3,d-2);
+  return {u,d};
+}
+function missingFor(d){
+  const k=CATALOG[d.code],m=[];
+  if(!d.patient)m.push('patient name');
+  if(k.unit!=='arch'&&!d.teeth.length)m.push('tooth numbers');
+  if(k.unit==='arch'&&!d.teeth.length)m.push('which arch (upper or lower)');
+  if(k.shade&&!d.shade)m.push('shade');
+  if(d.code==='impl-crown'&&!/(straumann|nobel|neodent|osstem|zimmer|biohorizons|megagen|implant system|platform)/i.test(d.notes||''))m.push('implant system and platform');
+  if(d.code==='zr-bridge'&&d.teeth.length<3)m.push('bridge span (abutments and pontics)');
+  return m;
+}
 
 /* ---------- state ---------- */
-const KEY='benchline-demo-v1';
+const KEY='benchline-demo-v2';
 let S;
-function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
-function load(){try{const r=localStorage.getItem(KEY);if(r)return JSON.parse(r)}catch(e){}return seed()}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){toast('This browser is out of demo storage — try fewer photos')}}
+function loadState(){try{const r=localStorage.getItem(KEY);if(r)return JSON.parse(r)}catch(e){}return seed()}
 
 function seed(){
   const st={
-    lab:{name:'Your Dental Lab',abn:'00 000 000 000',addr:'Unit 4, 12 Example St, Brisbane QLD 4000',acct:'200'},
+    lab:{name:'Your Dental Lab',abn:'00 000 000 000',addr:'West Perth WA 6005',acct:'200'},
     practices:[
-      {id:'p1',name:'Harbourside Dental',suburb:'Neutral Bay NSW',email:'accounts@harbourside.example',dentists:['Dr Priya Raman','Dr Tom Ellery'],disc:0},
-      {id:'p2',name:'Ashgrove Family Dental',suburb:'Ashgrove QLD',email:'admin@ashgrovefd.example',dentists:['Dr Mei Lin'],disc:5},
-      {id:'p3',name:'Swan Street Smiles',suburb:'Richmond VIC',email:'reception@swanst.example',dentists:['Dr Josh Baird','Dr Ana Ruiz'],disc:0},
-      {id:'p4',name:'Coastline Dental Group',suburb:'Wollongong NSW',email:'lab@coastline.example',dentists:['Dr Sam Okafor'],disc:8}
+      {id:'p1',name:'Subiaco Dental Studio',suburb:'Subiaco WA',email:'accounts@subiacods.example',dentists:['Dr Priya Raman','Dr Tom Ellery'],disc:0,booking:'portal'},
+      {id:'p2',name:'Cottesloe Family Dental',suburb:'Cottesloe WA',email:'admin@cottfd.example',dentists:['Dr Mei Lin'],disc:5,booking:'Seazona'},
+      {id:'p3',name:'Leederville Smiles',suburb:'Leederville WA',email:'reception@leedsmiles.example',dentists:['Dr Josh Baird','Dr Ana Ruiz'],disc:0,booking:'email'},
+      {id:'p4',name:'Fremantle Dental Group',suburb:'Fremantle WA',email:'lab@fremdg.example',dentists:['Dr Sam Okafor'],disc:8,booking:'paper'}
     ],
     techs:[
-      {id:'t1',name:'Dana Whitfield',role:'CAD design'},
-      {id:'t2',name:'Marco Pellegrini',role:'Milling'},
-      {id:'t3',name:'Hannah Cho',role:'Ceramist'},
-      {id:'t4',name:'Luke Tran',role:'Receiving, QC & dispatch'}
+      {id:'t1',name:'Dana Whitfield',skills:['received','models'],cap:14},
+      {id:'t2',name:'Marco Pellegrini',skills:['models','milling'],cap:16},
+      {id:'t3',name:'Ellie Grant',skills:['design','implant'],cap:9},
+      {id:'t4',name:'Sean Kelly',skills:['design','milling'],cap:10},
+      {id:'t5',name:'Hannah Cho',skills:['ceramics','anterior'],cap:4},
+      {id:'t6',name:'Tom Reyes',skills:['ceramics'],cap:4},
+      {id:'t7',name:'Mia Novak',skills:['ceramics','anterior','qc'],cap:3},
+      {id:'t8',name:'Ben Archer',skills:['qc','received'],cap:20}
     ],
     cases:[],invoices:[],pay:[],clock:[],seq:241,inv:2051
   };
-  // practice, dentist, patient, code, teeth, shade, stage, receivedAgo, dueIn, extra
+  // practice, dentist, patient, code, teeth, shade, stage, receivedAgo, assign (tech per stage index), extra
   const rows=[
-    ['p1',0,'J. Nguyen','zr-crown',[36],'A2',0,0,6],
-    ['p3',1,'M. Kowalski','zr-bridge',[24,25,26],'A3',0,0,8],
-    ['p2',0,'R. Singh','emax-crown',[11,21],'B1',1,1,0,{rush:1}],
-    ['p4',0,'L. Harris','impl-crown',[46],'A3',1,2,4],
-    ['p1',1,'S. Patel','veneer',[12,11,21,22],'BL2',1,4,5],
-    ['p3',0,'K. Murphy','zr-crown',[16],'A3.5',2,5,1,{stuck:1}],
-    ['p2',0,'D. Chen','inlay',[37],'A2',2,3,2],
-    ['p4',0,'A. Rossi','zr-bridge',[44,45,46],'A3',2,5,-1],
-    ['p1',0,'T. Brown','emax-crown',[14],'A1',3,4,0],
-    ['p3',1,'G. Wilson','pfm-crown',[27],'A3',3,6,1],
-    ['p4',0,'H. Ali','full-denture',[],'A2',3,8,3,{note:'Upper full denture, try-in approved'}],
-    ['p2',0,'E. Taylor','splint',[],'',4,3,0,{note:'Upper hard splint, 2mm'}],
-    ['p1',0,'C. Lee','zr-crown',[46],'A2',4,5,1],
-    ['p3',0,'B. Martin','gold-crown',[17],'',5,9,-2],
-    ['p1',1,'N. Walker','zr-crown',[26],'A3',5,8,-1],
-    ['p4',0,'F. Young','emax-crown',[22],'A2',5,7,-1,{remake:1,note:'Remake: contact light on mesial'}],
-    ['p2',0,'P. Scott','partial',[],'',5,12,-3,{note:'Lower Co-Cr partial replacing 35 36 46'}],
+    ['p2',0,'O. Grant','zr-crown',[46],'A3',0,-2,null,{src:'Seazona'}],
+    ['p1',1,'D. Fraser','emax-crown',[14,13,12,11,21,22,23,24],'B1',0,-1,null,{src:'portal',note:'Full anterior rehab, smile design approved'}],
+    ['p3',0,'M. Kowalski','zr-bridge',[24,25,26],'A3',1,0,null,{src:'email'}],
+    ['p4',0,'R. Singh','layered-crown',[11],'A2',1,0,'t1',{src:'paper',rush:1}],
+    ['p2',0,'L. Harris','impl-crown',[46],'A3',2,1,'t2',{src:'Seazona',note:'Straumann BLT RC'}],
+    ['p1',0,'S. Patel','veneer',[12,11,21,22],'BL2',3,2,'t3',{src:'portal'}],
+    ['p3',1,'K. Murphy','zr-crown',[16,17],'A3.5',3,4,'t4',{src:'email',stuck:1}],
+    ['p4',0,'A. Rossi','zr-bridge',[44,45,46],'A3',4,4,'t2',{src:'paper'}],
+    ['p2',0,'D. Chen','inlay',[37],'A2',4,3,null,{src:'Seazona'}],
+    ['p1',0,'T. Brown','emax-crown',[14,15],'A1',5,5,'t6',{src:'portal'}],
+    ['p3',1,'G. Wilson','layered-crown',[21],'A2',5,6,'t5',{src:'email'}],
+    ['p4',0,'H. Ali','full-denture',[11,21],'A2',5,7,null,{src:'paper',note:'Upper full denture, try-in approved'}],
+    ['p1',1,'P. Young','emax-crown',[34,35,36],'A3',5,5,'t7',{src:'portal'}],
+    ['p3',0,'J. Ahmed','layered-crown',[13,12,11,21,22,23],'A1',5,4,'t5',{src:'email',note:'Characterise incisal halo, see photos'}],
+    ['p4',0,'W. Park','emax-crown',[45,46],'A3',5,3,null,{src:'paper'}],
+    ['p2',0,'E. Taylor','splint',[16,26],'',6,3,'t8',{src:'Seazona',note:'Upper hard splint, 2 mm'}],
+    ['p1',0,'C. Lee','zr-crown',[46],'A2',6,6,'t7',{src:'portal'}],
+    ['p3',0,'B. Martin','gold-crown',[17],'',7,9,null,{src:'email'}],
+    ['p1',1,'N. Walker','zr-crown',[26],'A3',7,8,null,{src:'portal'}],
+    ['p2',0,'F. Young','emax-crown',[22],'A2',7,7,null,{src:'Seazona',remake:1,note:'Remake: contact light on mesial'}]
   ];
   for(const r of rows){
-    const [pid,di,pt,code,teeth,shade,stage,ago,due,x={}]=r;
+    const [pid,di,pt,code,teeth,shade,stage,ago,asg,x]=r;
     const p=st.practices.find(p=>p.id===pid);
-    const recv=addDays(TODAY,-ago);
+    const recv=addDays(TODAY,-Math.max(0,ago));
+    const {d}=turnaround(code,teeth,x.rush);
     const c={id:uid(),no:'C-'+TODAY.slice(2,4)+'-'+String(st.seq++).padStart(4,'0'),practiceId:pid,dentist:p.dentists[di],patient:pt,
-      items:[{code,teeth,shade}],stage,received:recv,due:addDays(TODAY,due),rush:!!x.rush,remake:!!x.remake,notes:x.note||'',
-      assigned:{},history:[{d:recv,stage:0,who:'Luke Tran',txt:'Case received — Rx and impressions/scan logged'}],invoiced:false,source:'email'};
+      items:[{code,teeth,shade}],stage,booked:addDays(recv,-2),received:stage>0?recv:null,
+      due:stage===0?addWD(addDays(TODAY,-ago),d):addWD(recv,d)<TODAY&&stage<DONE&&!x.stuck?addWD(TODAY,1):addWD(recv,d),
+      rush:!!x.rush,remake:!!x.remake,notes:x.note||'',assigned:{},photos:[],invoiced:false,source:x.src,
+      history:[{d:addDays(recv,-2),stage:0,who:p.dentists[di],txt:'Booked via '+x.src}]};
+    if(stage===0)c.due=addWD(TODAY,d-1);
+    if(x.stuck)c.due=addDays(TODAY,-1);
     for(let s=1;s<=stage;s++){
-      let d=x.stuck?addDays(recv,1):addDays(TODAY,-(stage-s));if(d<recv)d=recv;
-      c.history.push({d,stage:s,who:st.techs.find(t=>t.id===STATION[s-1]).name,txt:'Moved to '+STAGES[s]});
+      let dd=x.stuck?addDays(recv,1):addDays(TODAY,-(stage-s));if(dd<recv)dd=recv;
+      c.history.push({d:dd,stage:s,who:'Lab',txt:s===1?'Box received and checked in':s===DONE?'Passed QC and dispatched by courier':'Moved to '+SN(s)});
     }
+    if(asg)c.assigned[stage]=asg;
     st.cases.push(c);
   }
-  // past invoices for aging
   const past=[['p1',12,1840,false],['p2',41,965,false],['p3',18,2310,false],['p4',72,1460,false],['p3',95,620,false],['p1',44,2120,true],['p4',27,880,true]];
   for(const [pid,ago,amt,paid] of past){
     const d=addDays(TODAY,-ago);
-    st.invoices.push({id:uid(),no:'INV-'+(st.inv++),practiceId:pid,date:d,due:addDays(d,30),paid,paidDate:paid?addDays(d,20):null,
-      lines:[{desc:'Restorative work — statement period ending '+fmtShort(d),qty:1,unit:amt}]});
+    st.invoices.push({id:uid(),no:'INV-'+(st.inv++),practiceId:pid,date:d,due:addDays(d,30),paid,lines:[{desc:'Restorative work — statement period ending '+fmtShort(d),qty:1,unit:amt}]});
   }
-  // some piece pay this week
-  const wk=[['t1',1,3],['t2',2,4],['t3',3,2],['t4',4,5],['t3',3,3],['t1',1,2]];
-  wk.forEach(([t,s,u],i)=>st.pay.push({techId:t,stage:s,units:u,rate:PIECE[s],amount:u*PIECE[s],date:addDays(TODAY,-(i%3)),caseNo:'—'}));
+  [['t3','design',3],['t2','milling',4],['t5','ceramics',2],['t8','qc',5],['t6','ceramics',3],['t4','design',2]]
+    .forEach(([t,k,u],i)=>st.pay.push({techId:t,stage:k,units:u,amount:u*PIECE[k],date:addDays(TODAY,-(i%3))}));
   return st;
 }
-S=load();
+S=loadState();
+if(S.prices)Object.entries(S.prices).forEach(([k,v])=>{if(CATALOG[k])CATALOG[k].price=v});
 
 const prac=id=>S.practices.find(p=>p.id===id);
 const tech=id=>S.techs.find(t=>t.id===id);
 const caseById=id=>S.cases.find(c=>c.id===id);
-const owner=c=>c.assigned[c.stage]||STATION[c.stage];
+const owner=c=>c.assigned[c.stage]||null;
 const lastMove=c=>c.history[c.history.length-1].d;
-function priceFor(c,it){const p=prac(c.practiceId);const base=CATALOG[it.code].price*(1-(p.disc||0)/100);return c.remake?0:Math.round(base*100)/100}
-function caseTotal(c){return c.items.reduce((s,it)=>s+priceFor(c,it)*units(it),0)}
-function dueState(c){if(c.stage===5)return 'done';const d=diff(c.due,TODAY);return d<0?'overdue':d===0?'today':'ok'}
-function itemLabel(it){const k=CATALOG[it.code];const n=units(it);return (k.unit==='unit'?n+'-unit ':'')+k.name+(it.teeth.length&&k.unit!=='unit'&&n>1?' ×'+n:'')}
-const teethTxt=it=>it.teeth.length?it.teeth.join(' · '):'';
+const caseUnits=c=>c.items.reduce((s,it)=>s+units(it),0);
+const active=c=>c.stage>0&&c.stage<DONE;
+function priceFor(c,it){const p=prac(c.practiceId);return c.remake?0:Math.round(CATALOG[it.code].price*(1-(p.disc||0)/100)*100)/100}
+const caseTotal=c=>c.items.reduce((s,it)=>s+priceFor(c,it)*units(it),0);
+function dueState(c){if(c.stage===DONE)return 'done';const d=diff(c.due,TODAY);return d<0?'overdue':d===0?'today':'ok'}
+function itemLabel(it){const k=CATALOG[it.code];const n=units(it);return (k.unit==='unit'?n+'-unit ':'')+k.name+(k.unit==='tooth'&&n>1?' ×'+n:'')}
+const teethTxt=it=>CATALOG[it.code].unit==='arch'?[...new Set(it.teeth.map(t=>t<30?'Upper':'Lower'))].join(' + '):it.teeth.join(' · ');
 const shadeChip=s=>s?`<span class="shade"><i style="background:${SHADES[s]||'#eee'}"></i>${esc(s)}</span>`:'';
 function dueChip(c){const s=dueState(c);if(s==='done')return '<span class="chip good">Dispatched</span>';
   const d=diff(c.due,TODAY);
   return s==='overdue'?`<span class="chip bad">${-d}d overdue</span>`:s==='today'?'<span class="chip warn">Due today</span>':`<span class="chip">Due ${fmtD(c.due)}</span>`}
+function advLabel(c){return c.stage===0?'Box arrived — check in':c.stage===DONE-1?'Pass QC and dispatch':'Done — send to '+SN(c.stage+1)}
+
+/* ---------- allocation ---------- */
+function needSkills(c,s=c.stage){
+  if(s===0||s===DONE)return [];
+  const k=STAGES[s].k, need=[k];
+  if(k==='ceramics'&&c.items.some(it=>it.teeth.some(isAnt)&&CATALOG[it.code].unit!=='arch'))need.push('anterior');
+  if(k==='design'&&c.items.some(it=>it.code==='impl-crown'))need.push('implant');
+  return need;
+}
+const canDo=(t,c)=>needSkills(c).every(k=>t.skills.includes(k));
+const load=tid=>S.cases.filter(c=>active(c)&&c.assigned[c.stage]===tid).reduce((s,c)=>s+caseUnits(c),0);
+function suggest(c){
+  const u=caseUnits(c);
+  const cands=S.techs.filter(t=>canDo(t,c));
+  if(!cands.length)return null;
+  return cands.sort((a,b)=>(load(a.id)+u)/a.cap-(load(b.id)+u)/b.cap)[0];
+}
+function stageLoad(k){
+  const demand=S.cases.filter(c=>active(c)&&STAGES[c.stage].k===k).reduce((s,c)=>s+caseUnits(c),0);
+  const cap=S.techs.filter(t=>t.skills.includes(k)).reduce((s,t)=>s+t.cap,0);
+  return {demand,cap};
+}
+
+/* ---------- tooth chart ---------- */
+const UPPER=[18,17,16,15,14,13,12,11,21,22,23,24,25,26,27,28], LOWER=[48,47,46,45,44,43,42,41,31,32,33,34,35,36,37,38];
+const charts={};
+function chartHtml(id,sel,ro){
+  const set=new Set(sel);
+  const cell=t=>{const m=t%10>=6?' m':'';return ro?`<span class="tooth${m}${set.has(t)?' on':''}">${t}</span>`:`<button type="button" class="tooth${m}" data-act="tooth" data-chart="${id}" data-t="${t}" aria-pressed="${set.has(t)}" aria-label="Tooth ${t}">${t}</button>`};
+  const row=(arr,cls)=>`<div class="chartrow ${cls}">${arr.slice(0,8).map(cell).join('')}<span></span>${arr.slice(8).map(cell).join('')}</div>`;
+  return `<div class="chartwrap"><div class="chart" id="chart-${id}"><div class="chartlbl"><span>Upper right</span><span>Upper left</span></div>${row(UPPER,'upper')}${row(LOWER,'lower')}<div class="chartlbl"><span>Lower right</span><span>Lower left</span></div></div></div>`;
+}
+function quoteHtml(code,teeth,rush,from){
+  const {u,d}=turnaround(code,teeth,rush);
+  const k=CATALOG[code];
+  return `<span><b class="tnum">${u}</b> ${k.unit==='arch'?(u===1?'arch':'arches'):'unit'+(u===1?'':'s')}</span>
+    <span><b class="tnum">${d}</b> working days</span>
+    <span>Earliest back <b>${fmtD(addWD(from,d))}</b></span>${rush?'<span class="chip bad">Rush</span>':''}`;
+}
 
 /* ---------- views ---------- */
 const V={};
 let filt={q:'',p:''};
 
 V.board=()=>{
-  const live=S.cases.filter(c=>c.stage<5);
+  const live=S.cases.filter(c=>c.stage<DONE&&c.stage>0);
   const today=live.filter(c=>dueState(c)==='today'), over=live.filter(c=>dueState(c)==='overdue');
-  const stuck=live.filter(c=>c.stage>0&&diff(TODAY,lastMove(c))>=3);
+  const stuck=live.filter(c=>diff(TODAY,lastMove(c))>=3);
+  const unassigned=live.filter(c=>!owner(c));
+  const cer=stageLoad('ceramics');
   const q=filt.q.toLowerCase();
   const show=S.cases.filter(c=>(!filt.p||c.practiceId===filt.p)&&(!q||[c.no,c.patient,c.dentist,prac(c.practiceId).name,...c.items.map(itemLabel)].join(' ').toLowerCase().includes(q))
-    &&(c.stage<5||diff(TODAY,lastMove(c))<=5));
+    &&(c.stage<DONE||diff(TODAY,lastMove(c))<=5));
   const brief=[];
-  if(over.length)brief.push(`${over.length} overdue: ${over.map(c=>esc(c.no)+' ('+esc(STAGES[c.stage])+')').join(', ')}.`);
-  if(stuck.length)brief.push(`No movement for 3+ days: ${stuck.map(c=>esc(c.no)+' in '+esc(STAGES[c.stage])+' with '+esc(tech(owner(c))?.name||'—')).join(', ')}.`);
-  if(today.length)brief.push(`${today.length} due out today — QC should clear by 2 pm for the afternoon courier.`);
+  if(over.length)brief.push(`${over.length} overdue: ${over.map(c=>esc(c.no)+' ('+esc(SN(c.stage))+')').join(', ')}.`);
+  if(stuck.length)brief.push(`No movement for 3+ days: ${stuck.map(c=>esc(c.no)+' in '+esc(SN(c.stage))).join(', ')}.`);
+  brief.push(`Ceramics has ${cer.demand} units waiting against ${cer.cap} units a day of ceramist capacity — about ${(cer.demand/cer.cap).toFixed(1)} days of work.`);
+  if(unassigned.length)brief.push(`<a href="#allocation">${unassigned.length} case${unassigned.length===1?'':'s'} need a technician</a>.`);
   return `
-  <div class="viewhead"><div><h2>Cases</h2><p>Every case from Rx to dispatch. Open a case to move it on, assign a technician or print its TGA statement.</p></div><span class="sp"></span><a class="btn pri" href="#intake" style="text-decoration:none">New case</a></div>
+  <div class="viewhead"><div><h2>Cases</h2><p>Every job from booking to dispatch. Open a case for its lab slip, photos, technician and TGA statement.</p></div><span class="sp"></span><a class="btn pri" href="#intake" style="text-decoration:none">New case</a></div>
   <div class="panel brief">
-    <span class="stat"><b class="tnum">${live.length}</b>in production</span>
+    <span class="stat"><b class="tnum">${live.length}</b>in the lab</span>
+    <span class="stat"><b class="tnum">${S.cases.filter(c=>c.stage===0).length}</b>booked, not arrived</span>
     <span class="stat"><b class="tnum" style="color:var(--warn)">${today.length}</b>due today</span>
     <span class="stat"><b class="tnum" style="color:var(--bad)">${over.length}</b>overdue</span>
-    <span class="stat"><b class="tnum">${stuck.length}</b>stalled</span>
-    <div class="note"><b>Morning brief.</b> ${brief.join(' ')||'Nothing stuck or late. Good day.'}</div>
+    <span class="stat"><b class="tnum">${unassigned.length}</b>unassigned</span>
+    <div class="note"><b>Morning brief.</b> ${brief.join(' ')}</div>
   </div>
   <div class="toolbar">
     <input id="q" type="search" placeholder="Search patient, case no, dentist" value="${esc(filt.q)}" style="flex:1 1 220px">
     <select id="pf"><option value="">All practices</option>${S.practices.map(p=>`<option value="${p.id}" ${filt.p===p.id?'selected':''}>${esc(p.name)}</option>`).join('')}</select>
   </div>
   <div class="board">${STAGES.map((s,i)=>{const cs=show.filter(c=>c.stage===i).sort((a,b)=>a.due.localeCompare(b.due));
-    return `<section class="col"><h3><span>${s}</span><span>${cs.length}</span></h3><div class="cards">${cs.map(cardHtml).join('')||'<div class="empty">Nothing here</div>'}</div></section>`}).join('')}</div>`;
+    const u=cs.reduce((n,c)=>n+caseUnits(c),0);
+    return `<section class="col"><h3><span>${s.n}</span><span>${u}u</span></h3><div class="cards">${cs.map(cardHtml).join('')||'<div class="empty">Nothing here</div>'}</div></section>`}).join('')}</div>`;
 };
 function cardHtml(c){
   const it=c.items[0], st=dueState(c), t=tech(owner(c));
   return `<button class="card ${st==='overdue'?'overdue':st==='today'?'today':''}" data-act="open" data-id="${c.id}">
-    <div class="no">${esc(c.no)}</div>
-    <div class="what">${esc(itemLabel(it))}${it.teeth.length?' <span class="mono muted">'+esc(teethTxt(it))+'</span>':''}</div>
+    <div class="no">${esc(c.no)}${c.stage===0?' · via '+esc(c.source):''}</div>
+    <div class="what">${esc(itemLabel(it))} <span class="mono muted">${esc(teethTxt(it))}</span></div>
     <div class="who">${esc(c.patient)} · ${esc(prac(c.practiceId).name)}</div>
-    <div class="meta">${dueChip(c)}${shadeChip(it.shade)}${c.rush?'<span class="chip bad">Rush</span>':''}${c.remake?'<span class="chip acc">Remake</span>':''}${c.stage<5&&t?`<span class="chip">${esc(t.name.split(' ')[0])}</span>`:''}</div>
+    <div class="meta">${dueChip(c)}${shadeChip(it.shade)}${c.rush?'<span class="chip bad">Rush</span>':''}${c.remake?'<span class="chip acc">Remake</span>':''}${active(c)?(t?`<span class="chip">${esc(t.name.split(' ')[0])}</span>`:'<span class="chip warn">Unassigned</span>'):''}${c.photos.length?`<span class="chip">${c.photos.length} photo${c.photos.length>1?'s':''}</span>`:''}</div>
   </button>`;
 }
 
 /* --- case dialog --- */
 function openCase(id){
   const c=caseById(id); if(!c)return;
-  const p=prac(c.practiceId);
+  const p=prac(c.practiceId), sug=active(c)&&suggest(c);
   $('#dlgbody').innerHTML=`
     <button class="iconbtn x" data-act="close">Close</button>
-    <div><div class="mono muted">${esc(c.no)} · ${c.source==='portal'?'Ordered in portal':'Received by '+esc(c.source)}</div>
+    <div><div class="mono muted">${esc(c.no)} · booked via ${esc(c.source)}</div>
       <h2 style="margin-top:4px">${esc(c.patient)}</h2>
       <div class="muted">${esc(c.dentist)} · ${esc(p.name)}, ${esc(p.suburb)}</div>
-      <div class="meta" style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">${dueChip(c)}${c.rush?'<span class="chip bad">Rush</span>':''}${c.remake?'<span class="chip acc">Remake, no charge</span>':''}</div></div>
+      <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">${dueChip(c)}${c.rush?'<span class="chip bad">Rush</span>':''}${c.remake?'<span class="chip acc">Remake, no charge</span>':''}</div></div>
+    <div class="actions"><button class="btn pri" data-act="slip" data-id="${c.id}">Lab slip</button><button class="btn" data-act="tga" data-id="${c.id}">TGA statement</button></div>
     <div class="sect"><h4>Prescription</h4>
-      <div class="tbl"><table><tr><th>Item</th><th>Teeth (FDI)</th><th>Shade</th><th class="r">Ex GST</th></tr>
+      ${chartHtml('ro',c.items.flatMap(it=>it.teeth),true)}
+      <div class="tbl" style="margin-top:10px"><table><tr><th>Item</th><th>Teeth</th><th>Shade</th><th class="r">Ex GST</th></tr>
       ${c.items.map(it=>`<tr><td>${esc(itemLabel(it))}<div class="muted" style="font-size:.8rem">${esc(CATALOG[it.code].mat)}</div></td><td class="mono">${esc(teethTxt(it))||'—'}</td><td>${shadeChip(it.shade)||'—'}</td><td class="r">${money(priceFor(c,it)*units(it))}</td></tr>`).join('')}
       </table></div>${c.notes?`<p class="hint">Notes: ${esc(c.notes)}</p>`:''}</div>
-    <div class="sect"><h4>Progress — ${esc(STAGES[c.stage])}</h4>
-      <div class="track">${STAGES.map((s,i)=>`<span class="${i<c.stage||c.stage===5?'done':i===c.stage?'now':''}"></span>`).join('')}</div>
-      <div class="tracklabels">${STAGES.map(s=>`<span>${s.slice(0,4)}</span>`).join('')}</div>
-      ${c.stage<5?`<div class="form" style="margin-top:12px"><div class="field"><label for="asg">Technician for ${esc(STAGES[c.stage])}</label>
-        <select id="asg" data-id="${c.id}">${S.techs.map(t=>`<option value="${t.id}" ${owner(c)===t.id?'selected':''}>${esc(t.name)} — ${esc(t.role)}</option>`).join('')}</select></div>
+    <div class="sect"><h4>Progress — ${esc(SN(c.stage))}</h4>
+      <div class="track">${STAGES.map((s,i)=>`<span class="${i<c.stage||c.stage===DONE?'done':i===c.stage?'now':''}"></span>`).join('')}</div>
+      ${active(c)?`<div class="form" style="margin-top:12px"><div class="field"><label for="asg">Technician for ${esc(SN(c.stage))}</label>
+        <select id="asg" data-id="${c.id}"><option value="">Unassigned</option>${S.techs.map(t=>`<option value="${t.id}" ${owner(c)===t.id?'selected':''} ${canDo(t,c)?'':'disabled'}>${esc(t.name)}${canDo(t,c)?'':' — not skilled for this'}</option>`).join('')}</select>
+        ${!owner(c)&&sug?`<p class="hint">Suggested: <b>${esc(sug.name)}</b> (${load(sug.id)}/${sug.cap} units today) <button class="btn sm" data-act="takesug" data-id="${c.id}" data-t="${sug.id}">Assign</button></p>`:''}</div>
         <div class="field"><label for="due2">Due back</label><input id="due2" type="date" value="${c.due}" data-id="${c.id}"></div></div>`:''}
       <div class="actions" style="margin-top:12px">
-        ${c.stage<5?`<button class="btn pri" data-act="advance" data-id="${c.id}">${c.stage===4?'Pass QC and dispatch':'Done — send to '+STAGES[c.stage+1]}</button>`:''}
-        ${c.stage>0&&c.stage<5?`<button class="btn" data-act="back" data-id="${c.id}">Send back to ${STAGES[c.stage-1]}</button>`:''}
+        ${c.stage<DONE?`<button class="btn pri" data-act="advance" data-id="${c.id}">${advLabel(c)}</button>`:''}
+        ${c.stage>0&&c.stage<DONE?`<button class="btn" data-act="back" data-id="${c.id}">Send back to ${SN(c.stage-1)}</button>`:''}
         <button class="btn" data-act="remake" data-id="${c.id}">${c.remake?'Clear remake':'Flag as remake'}</button>
-        <button class="btn" data-act="tga" data-id="${c.id}">TGA statement</button>
       </div></div>
+    <div class="sect"><h4>Photos</h4><div class="photos">${c.photos.map(src=>`<img src="${src}" alt="Case photo">`).join('')}
+      <label class="btn sm filebtn">Add photo<input type="file" accept="image/*" data-photo="${c.id}"></label></div>
+      <p class="hint">Shade photos, prep shots and fit photos stay with the case instead of on someone's phone.</p></div>
     <div class="sect"><h4>Timeline the dentist sees</h4><ul class="timeline">${c.history.slice().reverse().map(h=>`<li><span class="d">${fmtD(h.d)}</span><span>${esc(h.txt)} <span class="muted">— ${esc(h.who)}</span></span></li>`).join('')}</ul></div>
     <div id="tgaout"></div>`;
   const d=$('#dlg'); if(!d.open)d.showModal();
 }
+function deptDates(c){
+  const start=c.received||TODAY, total=Math.max(1,wdBetween(start,c.due));
+  return STAGES.slice(1,DONE).map((s,i)=>({s,i:i+1,date:addWD(start,Math.round(FRAC[s.k]*total))}));
+}
+function openSlip(id){
+  const c=caseById(id),p=prac(c.practiceId);
+  $('#dlgbody').innerHTML=`
+    <div class="actions"><button class="btn sm" data-act="open" data-id="${c.id}">Back to case</button><span class="muted" style="font-size:.84rem;align-self:center">Prints on one A4 sheet in the full version.</span></div>
+    <div class="slip">
+      <div class="sliphead"><div><div class="eyebrow">${esc(S.lab.name)} · Lab slip</div><div class="slipno">${esc(c.no)}</div>
+        <div style="margin-top:6px;display:flex;gap:8px">${c.rush?'<span class="stamp">RUSH</span>':''}${c.remake?'<span class="stamp">REMAKE</span>':''}</div></div>
+        <div style="text-align:right;font-size:.88rem"><div class="eyebrow">Due back</div><div style="font-size:1.25rem;font-weight:700">${fmtD(c.due)}</div><div class="muted">Received ${c.received?fmtD(c.received):'— not yet'}</div></div></div>
+      <div class="slipgrid">
+        <div><span>Practice</span>${esc(p.name)}</div><div><span>Dentist</span>${esc(c.dentist)}</div>
+        <div><span>Patient</span>${esc(c.patient)}</div><div><span>Booked via</span>${esc(c.source)}</div></div>
+      ${chartHtml('slip',c.items.flatMap(it=>it.teeth),true)}
+      <div class="tbl"><table><tr><th>Work</th><th>Teeth</th><th>Shade</th><th>Material</th><th class="r">Units</th></tr>
+        ${c.items.map(it=>`<tr><td><b>${esc(itemLabel(it))}</b></td><td class="mono">${esc(teethTxt(it))}</td><td>${shadeChip(it.shade)||'—'}</td><td>${esc(CATALOG[it.code].mat)}</td><td class="r">${units(it)}</td></tr>`).join('')}</table></div>
+      ${c.notes?`<div><div class="eyebrow">Notes from the dentist</div>${esc(c.notes)}</div>`:''}
+      <div class="tbl"><table><tr><th>Department</th><th>Finish by</th><th>Technician</th><th class="c">Initials</th><th class="c">Done</th></tr>
+        ${deptDates(c).map(d=>`<tr><td>${esc(d.s.n)}</td><td class="mono">${fmtD(d.date)}</td><td>${esc(tech(c.assigned[d.i])?.name||'')}</td><td style="border-bottom:1px solid var(--ink)"></td><td class="c"><span class="box ${c.stage>d.i?'done':''}"></span></td></tr>`).join('')}</table></div>
+      <div class="muted" style="font-size:.76rem">Generated from the booking — department dates are worked back from the due date, ${wdBetween(c.received||TODAY,c.due)} working days.</div>
+    </div>`;
+  if(!$('#dlg').open)$('#dlg').showModal();
+}
 function advance(c,who){
-  const from=c.stage, ownerId=owner(c), t=tech(ownerId);
-  const u=c.items.reduce((s,it)=>s+units(it),0);
-  if(PIECE[from])S.pay.push({techId:ownerId,stage:from,units:u,rate:PIECE[from],amount:u*PIECE[from],date:TODAY,caseNo:c.no});
+  const from=c.stage, k=STAGES[from].k, oid=owner(c);
+  if(PIECE[k]&&oid)S.pay.push({techId:oid,stage:k,units:caseUnits(c),amount:caseUnits(c)*PIECE[k],date:TODAY});
   c.stage++;
-  c.history.push({d:TODAY,stage:c.stage,who:who||t?.name||'Lab',txt:c.stage===5?'Passed QC and dispatched by courier':'Moved to '+STAGES[c.stage]});
+  if(c.stage===1)c.received=TODAY;
+  c.history.push({d:TODAY,stage:c.stage,who:who||tech(oid)?.name||'Lab',txt:c.stage===1?'Box received and checked in':c.stage===DONE?'Passed QC and dispatched by courier':'Moved to '+SN(c.stage)});
   save();
 }
 function tgaText(c){
@@ -390,11 +537,11 @@ Address:        ${L.addr}
 Case number:    ${c.no}
 Patient:        ${c.patient}
 Prescriber:     ${c.dentist}, ${p.name}, ${p.suburb}
-Date of Rx:     ${fmtShort(c.received)}
-Date supplied:  ${fmtShort(c.stage===5?lastMove(c):TODAY)}
+Date of Rx:     ${fmtShort(c.booked||TODAY)}
+Date supplied:  ${fmtShort(c.stage===DONE?lastMove(c):TODAY)}
 
 Device(s):
-${c.items.map(it=>`  - ${itemLabel(it)}${it.teeth.length?' — teeth '+it.teeth.join(', '):''}${it.shade?' — shade '+it.shade:''}
+${c.items.map(it=>`  - ${itemLabel(it)} — ${teethTxt(it)}${it.shade?' — shade '+it.shade:''}
     Material: ${CATALOG[it.code].mat}`).join('\n')}
 
 This device has been made specifically in accordance with a written
@@ -405,118 +552,172 @@ Essential Principles not complied with: none.
 
 Signed: ______________________   for ${L.name}`;
 }
+function addPhoto(id,file){
+  const c=caseById(id),r=new FileReader();
+  r.onload=()=>{const img=new Image();img.onload=()=>{
+    const k=Math.min(1,900/Math.max(img.width,img.height)),cv=document.createElement('canvas');
+    cv.width=img.width*k;cv.height=img.height*k;cv.getContext('2d').drawImage(img,0,0,cv.width,cv.height);
+    c.photos.push(cv.toDataURL('image/jpeg',.72));c.history.push({d:TODAY,stage:c.stage,who:'Lab',txt:'Photo added'});save();render();openCase(id);toast('Photo added to '+c.no)};
+    img.src=r.result};
+  r.readAsDataURL(file);
+}
 
 /* --- intake --- */
 const RX_SAMPLES=[
- {label:'Emailed Rx',txt:`From: Dr Priya Raman <priya@harbourside.example>
-Subject: New case - crown 46
+ {label:'Emailed Rx',txt:`From: Dr Priya Raman
+Subject: New case - crowns
 
-Hi team, please make a zirconia crown on 46 for patient Olivia Grant.
-Shade A3. Scan sent through 3Shape Communicate.
-Need it back by Friday please. Thanks, Priya`},
- {label:'Dictated (voice note)',txt:`this is josh baird from swan street. patient: Daniel Fraser. three unit zirconia bridge, 14 to 16, pontic at 15. shade a2. rush please, he's flying out tuesday.`},
- {label:'Scanned paper form',txt:`ASHGROVE FAMILY DENTAL      Dr Mei Lin
-PT: Hannah Brooks     DATE: today
-WORK: e.max veneers 13 12 11 21 22 23
-SHADE: BL2     RETURN: 10/12
-NOTES: Pt wants natural, slight translucency incisal 1/3`}
+Hi team, please make e.max crowns on 14 13 12 11 21 22 23 24 for patient Olivia Grant.
+Shade B1. Scans sent through 3Shape Communicate. Smile design attached.
+Thanks, Priya`},
+ {label:'Dictated (voice note)',txt:`this is josh baird from leederville. patient: Daniel Fraser. three unit zirconia bridge, 14 to 16, pontic at 15. rush please, he's flying out tuesday.`},
+ {label:'Seazona booking',txt:`SEAZONA BOOKING #SZ-88213
+Practice: Cottesloe Family Dental   Clinician: Dr Mei Lin
+Patient: Hannah Brooks
+Category: Crown & Bridge > Implant
+Units: 1   Tooth: 36
+Notes: Straumann BLX RB, screw retained. Shade A3`}
 ];
 let draft=null;
 V.intake=()=>{
-  const d=draft||{};
+  const d=draft||{teeth:[]};
   const f=k=>d.found&&d.found.includes(k)?'found':'';
-  const pid=d.practiceId||S.practices[0].id;
+  const pid=d.practiceId||S.practices[0].id, code=d.code||'zr-crown';
+  charts.in=new Set(d.teeth||[]);
   return `
-  <div class="viewhead"><div><h2>Rx intake</h2><p>Paste an emailed Rx, a dictated note or the text of a scanned form. The fields it can read are filled and marked green; a technician checks them before the case is created.</p></div></div>
+  <div class="viewhead"><div><h2>Rx intake</h2><p>Paste an emailed Rx, a dictated note or a Seazona booking. What can be read is filled in and marked green. The lab slip is generated from this — nobody types the job twice.</p></div></div>
   <div class="grid2">
     <div class="panel">
       <h3>Incoming Rx</h3>
       <div class="samples">${RX_SAMPLES.map((s,i)=>`<button class="btn sm" data-act="sample" data-i="${i}">${s.label}</button>`).join('')}</div>
       <div class="field"><label for="rxtxt">Rx text</label><textarea id="rxtxt" class="rx" placeholder="Paste the Rx here">${esc(d.raw||'')}</textarea></div>
       <div class="actions" style="margin-top:10px"><button class="btn pri" data-act="read">Read Rx</button></div>
-      <p class="hint">This demo reads text with pattern matching. The full version would send photos and PDFs of paper forms to Claude to read, and would still never start work without a technician's check.</p>
+      <p class="hint">This demo reads text with pattern matching. The full version would read photos and PDFs of paper slips too, and a person still checks every case before it is created.</p>
     </div>
     <div class="panel">
       <h3>Case details ${d.found?`<span class="chip good">${d.found.length} fields read</span>`:''}</h3>
-      <form id="caseform" class="form" style="margin-top:12px">
+      <form id="caseform" class="form" style="margin-top:12px" novalidate>
         <div class="field ${f('practice')}"><label for="fp">Practice</label><select id="fp">${S.practices.map(p=>`<option value="${p.id}" ${p.id===pid?'selected':''}>${esc(p.name)}</option>`).join('')}</select></div>
         <div class="field ${f('dentist')}"><label for="fd">Dentist</label><select id="fd">${prac(pid).dentists.map(n=>`<option ${n===d.dentist?'selected':''}>${esc(n)}</option>`).join('')}</select></div>
-        <div class="field ${f('patient')}"><label for="fpt">Patient</label><input id="fpt" required value="${esc(d.patient||'')}" placeholder="Name or practice ref"></div>
-        <div class="field ${f('code')}"><label for="fc">Restoration</label><select id="fc">${Object.entries(CATALOG).map(([k,v])=>`<option value="${k}" ${k===d.code?'selected':''}>${esc(v.name)}</option>`).join('')}</select></div>
-        <div class="field ${f('teeth')}"><label for="ft">Teeth (FDI)</label><input id="ft" value="${esc((d.teeth||[]).join(' '))}" placeholder="e.g. 36 or 14 15 16"></div>
-        <div class="field ${f('shade')}"><label for="fs">Shade (VITA classical)</label><select id="fs"><option value="">None / n.a.</option>${Object.keys(SHADES).map(s=>`<option ${s===d.shade?'selected':''}>${s}</option>`).join('')}</select></div>
-        <div class="field ${f('due')}"><label for="fdue">Due back</label><input id="fdue" type="date" required value="${d.due||addDays(TODAY,7)}"></div>
-        <div class="field ${f('rush')}"><label for="fr">Priority</label><select id="fr"><option value="0">Standard</option><option value="1" ${d.rush?'selected':''}>Rush</option></select></div>
-        <div class="field full ${f('notes')}"><label for="fn">Notes to the bench</label><input id="fn" value="${esc(d.notes||'')}"></div>
-        <div class="field full"><button class="btn pri" type="submit">Create case</button></div>
+        <div class="field ${f('patient')}"><label for="fpt">Patient</label><input id="fpt" value="${esc(d.patient||'')}" placeholder="Name or practice ref"></div>
+        <div class="field ${f('code')}"><label for="fc">Restoration</label><select id="fc" data-quote="in">${Object.entries(CATALOG).map(([k,v])=>`<option value="${k}" ${k===code?'selected':''}>${esc(v.name)}</option>`).join('')}</select></div>
+        <div class="field full ${f('teeth')}"><label>Teeth — tap to select (FDI)</label>${chartHtml('in',d.teeth||[])}<div class="quote" id="quote-in"></div></div>
+        <div class="field ${f('shade')}"><label for="fs">Shade (VITA classical)</label><select id="fs" data-quote="in"><option value="">Not given</option>${Object.keys(SHADES).map(s=>`<option ${s===d.shade?'selected':''}>${s}</option>`).join('')}</select></div>
+        <div class="field ${f('rush')}"><label for="fr">Priority</label><select id="fr" data-quote="in"><option value="0">Standard</option><option value="1" ${d.rush?'selected':''}>Rush</option></select></div>
+        <div class="field ${f('due')}"><label for="fdue">Due back</label><input id="fdue" type="date" value="${d.due||''}"></div>
+        <div class="field ${f('box')}"><label for="fbox">Box</label><select id="fbox"><option value="1">In hand — check in now</option><option value="0">Booked, not arrived yet</option></select></div>
+        <div class="field full ${f('notes')}"><label for="fn">Notes to the bench</label><input id="fn" data-quote="in" value="${esc(d.notes||'')}"></div>
+        <div class="field full" id="miss-in"></div>
+        <div class="field full"><button class="btn pri" type="submit">Create case and lab slip</button></div>
       </form>
     </div>
   </div>`;
 };
+function refreshIntake(keepDue){
+  if(!$('#quote-in'))return;
+  const code=$('#fc').value, teeth=[...charts.in], rush=$('#fr').value==='1';
+  $('#quote-in').innerHTML=quoteHtml(code,teeth,rush,TODAY);
+  const earliest=addWD(TODAY,turnaround(code,teeth,rush).d), due=$('#fdue');
+  if(!keepDue||!due.value||due.value<earliest)due.value=draft&&draft.dueFound&&draft.due>=earliest&&keepDue!=='reset'?draft.due:earliest;
+  const m=missingFor({code,teeth,patient:$('#fpt').value.trim(),shade:$('#fs').value,notes:$('#fn').value});
+  const dn=$('#fd').value;
+  $('#miss-in').innerHTML=m.length?`<div class="missing"><div><b>Missing before work can start:</b> ${m.join(', ')}.</div>
+    <div class="actions"><button type="button" class="btn sm" data-act="copyask">Copy request to ${esc(dn)}</button></div></div>`:'<div class="missing ok"><b>Complete.</b> Everything the bench needs is here.</div>';
+}
+function askText(){
+  const code=$('#fc').value,m=missingFor({code,teeth:[...charts.in],patient:$('#fpt').value.trim(),shade:$('#fs').value,notes:$('#fn').value});
+  return `Hi ${$('#fd').value},\n\nThanks for the ${CATALOG[code].name.toLowerCase()} case${$('#fpt').value?' for '+$('#fpt').value:''}. Before we start we need: ${m.join(', ')}.\n\nReply here or add them in your portal and we'll get it on the bench straight away.\n\n${S.lab.name}`;
+}
 const DAYS=['sunday','monday','tuesday','wednesday','thursday','friday','saturday'];
 function parseRx(raw){
-  const t=raw, low=t.toLowerCase(), r={raw,found:[]};
+  const t=raw, low=t.toLowerCase(), r={raw,found:[],teeth:[]};
   for(const p of S.practices){
     if(low.includes(p.name.toLowerCase().split(' ')[0])){r.practiceId=p.id;r.found.push('practice')}
     for(const dn of p.dentists){const last=dn.split(' ').pop().toLowerCase();if(new RegExp('\\b'+last+'\\b').test(low)){r.practiceId=p.id;r.dentist=dn;if(!r.found.includes('practice'))r.found.push('practice');r.found.push('dentist')}}
   }
-  const pm=t.match(/(?:patient|pt)\s*[:\-]?\s*(?:is\s+)?([A-Za-z][A-Za-z'\-]+(?:\s+[A-Za-z][A-Za-z'\-]+)?)/i);
+  const pm=t.match(/(?:patient|pt)\s*[:\-]?\s*(?:is\s+)?([A-Za-z][A-Za-z'\-]+(?:[ \t]+[A-Za-z][A-Za-z'\-]+)?)/i);
   if(pm){r.patient=pm[1].replace(/\b\w/g,m=>m.toUpperCase());r.found.push('patient')}
-  // strip dates and shades before reading tooth numbers
-  let clean=t.replace(/\b\d{1,2}\/\d{1,2}(\/\d{2,4})?\b/g,' ').replace(/\b(BL[1-4]|[A-D][1-4](\.5)?)\b/gi,' ').replace(/\b\d+\s*(mm|unit|units)\b/gi,' ').replace(/\bthree|four|two\b/gi,' ');
+  let clean=t.replace(/#\S+/g,' ').replace(/\b\d{1,2}\/\d{1,2}(\/\d{2,4})?\b/g,' ').replace(/\b(BL[1-4]|[A-D][1-4](\.5)?)\b/gi,' ').replace(/\b\d+\s*(mm|unit|units)\b/gi,' ').replace(/units?\s*:\s*\d+/gi,' ');
   const teeth=new Set();
   clean=clean.replace(/\b([1-4])([1-8])\s*(?:-|–|to)\s*([1-4])([1-8])\b/g,(m,q1,a,q2,b)=>{if(q1===q2){const lo=Math.min(+a,+b),hi=Math.max(+a,+b);for(let i=lo;i<=hi;i++)teeth.add(+(q1+i))}return ' '});
   (clean.match(/\b[1-4][1-8]\b/g)||[]).forEach(n=>teeth.add(+n));
   if(teeth.size){r.teeth=[...teeth];r.found.push('teeth')}
-  const sm=t.match(/\b(BL[1-4]|[A-D][1-4](?:\.5)?)\b/i);
+  const sm=t.match(/\b(BL[1-4]|[A-D][1-4](?:\.5)?)\b/);
   if(sm&&SHADES[sm[1].toUpperCase()]){r.shade=sm[1].toUpperCase();r.found.push('shade')}
   const has=w=>new RegExp(w,'i').test(low);
-  r.code=has('implant')?'impl-crown':has('full denture|complete denture')?'full-denture':has('partial|co-?cr|chrome')?'partial':has('splint|night ?guard|occlusal')?'splint':
-    has('veneer')?'veneer':has('inlay|onlay')?'inlay':has('bridge')?'zr-bridge':has('e\\.?max|lithium')?'emax-crown':has('pfm|bonded')?'pfm-crown':has('gold')?'gold-crown':has('crown|zirc')?'zr-crown':null;
+  r.code=has('implant')?'impl-crown':has('full denture|complete denture')?'full-denture':has('splint|night ?guard|occlusal')?'splint':
+    has('veneer')?'veneer':has('inlay|onlay')?'inlay':has('bridge|pontic')?'zr-bridge':has('layered')?'layered-crown':has('e\\.?max|lithium')?'emax-crown':has('gold')?'gold-crown':has('crown|zirc')?'zr-crown':null;
   if(r.code)r.found.push('code'); else r.code='zr-crown';
   r.rush=has('\\brush\\b|urgent|asap');if(r.rush)r.found.push('rush');
-  const dm=t.match(/\b(\d{1,2})\/(\d{1,2})(?:\/(\d{2,4}))?\b/);
-  const wd=low.match(/\b(?:by|before|due|back|on)\s+(?:next\s+)?(monday|tuesday|wednesday|thursday|friday|saturday)\b/);
-  if(dm){const y=dm[3]?(dm[3].length===2?'20'+dm[3]:dm[3]):TODAY.slice(0,4);let ds=`${y}-${dm[2].padStart(2,'0')}-${dm[1].padStart(2,'0')}`;if(!dm[3]&&ds<TODAY)ds=(+y+1)+ds.slice(4);r.due=ds;r.found.push('due')}
-  else if(wd){const target=DAYS.indexOf(wd[1]);let n=(target-new Date(TODAY+'T00:00').getDay()+7)%7||7;r.due=addDays(TODAY,n);r.found.push('due')}
-  else r.due=addDays(TODAY,r.rush?3:7);
-  const nm=t.match(/notes?\s*[:\-]\s*(.+)/i);if(nm){r.notes=nm[1].trim();r.found.push('notes')}
-  if(teeth.size>=3&&r.code==='zr-crown'&&/bridge|pontic/i.test(low))r.code='zr-bridge';
+  const dm=t.match(/(?:due|return|back|by)\D{0,6}(\d{1,2})\/(\d{1,2})(?:\/(\d{2,4}))?/i);
+  const wd=low.match(/\b(?:by|before|due|back|on)\s+(?:next\s+)?(monday|tuesday|wednesday|thursday|friday)\b/);
+  if(dm){const y=dm[3]?(dm[3].length===2?'20'+dm[3]:dm[3]):TODAY.slice(0,4);let ds=`${y}-${dm[2].padStart(2,'0')}-${dm[1].padStart(2,'0')}`;if(!dm[3]&&ds<TODAY)ds=(+y+1)+ds.slice(4);r.due=ds;r.dueFound=1;r.found.push('due')}
+  else if(wd){let n=(DAYS.indexOf(wd[1])-new Date(TODAY+'T00:00').getDay()+7)%7||7;r.due=addDays(TODAY,n);r.dueFound=1;r.found.push('due')}
+  const nm=t.match(/notes?\s*[:\-]\s*(.+)/i);r.notes=nm?nm[1].trim():(/straumann|nobel|neodent/i.test(t)?(t.match(/(straumann|nobel|neodent)[^\n.]*/i)||[''])[0]:'');
+  if(r.notes)r.found.push('notes');
+  if(/seazona/i.test(t))r.source='Seazona';
   return r;
 }
 function createCase(data){
+  const inHand=data.inHand!==false;
   const c={id:uid(),no:'C-'+TODAY.slice(2,4)+'-'+String(S.seq++).padStart(4,'0'),practiceId:data.practiceId,dentist:data.dentist,patient:data.patient,
-    items:[{code:data.code,teeth:data.teeth,shade:data.shade}],stage:0,received:TODAY,due:data.due,rush:!!data.rush,remake:false,notes:data.notes||'',
-    assigned:{},history:[{d:TODAY,stage:0,who:data.source==='portal'?data.dentist:'Luke Tran',txt:data.source==='portal'?'Ordered through the portal':'Case received — Rx logged'}],invoiced:false,source:data.source||'email'};
+    items:[{code:data.code,teeth:data.teeth,shade:data.shade}],stage:inHand?1:0,booked:TODAY,received:inHand?TODAY:null,due:data.due,rush:!!data.rush,remake:false,notes:data.notes||'',
+    assigned:{},photos:[],invoiced:false,source:data.source||'email',
+    history:[{d:TODAY,stage:0,who:data.dentist,txt:'Booked via '+(data.source||'email')}]};
+  if(inHand)c.history.push({d:TODAY,stage:1,who:'Lab',txt:'Box received and checked in'});
+  const s=inHand&&suggest(c); if(s)c.assigned[1]=s.id;
   S.cases.push(c);save();return c;
 }
 
+/* --- allocation --- */
+V.allocation=()=>{
+  const open=S.cases.filter(c=>active(c)&&!owner(c)).sort((a,b)=>a.due.localeCompare(b.due));
+  const keys=['received','models','design','milling','ceramics','qc'];
+  return `
+  <div class="viewhead"><div><h2>Allocation</h2><p>Who can do what, and how full they are. Suggestions go to the least-loaded technician with the right skills — anterior ceramics only to ceramists signed off for it, implant design only to implant designers.</p></div></div>
+  <div class="panel"><h3>Department load</h3>
+    <div class="tbl" style="margin-top:8px"><table><tr><th>Department</th><th class="r">Units waiting</th><th class="r">Capacity / day</th><th>Load</th><th class="r">Days of work</th></tr>
+    ${keys.map(k=>{const {demand,cap}=stageLoad(k),pct=cap?demand/cap:0;return `<tr><td>${esc(STAGES.find(s=>s.k===k).n)}</td><td class="r">${demand}</td><td class="r">${cap}</td><td><div class="meter ${pct>1?'over':''}"><i style="width:${Math.min(100,pct*100)}%"></i></div></td><td class="r">${pct.toFixed(1)}</td></tr>`}).join('')}
+    </table></div></div>
+  <div class="panel" style="margin-top:16px"><div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between"><h3>Needs a technician (${open.length})</h3>${open.length?'<button class="btn pri" data-act="assignall">Assign all suggestions</button>':''}</div>
+    ${open.length?`<div class="tbl" style="margin-top:8px"><table><tr><th>Case</th><th>Stage</th><th class="r">Units</th><th>Due</th><th>Needs</th><th>Assign to</th></tr>
+    ${open.map(c=>{const s=suggest(c);return `<tr><td><button class="btn sm" data-act="open" data-id="${c.id}">${esc(c.no)}</button><div class="muted" style="font-size:.8rem">${esc(itemLabel(c.items[0]))}</div></td><td>${esc(SN(c.stage))}</td><td class="r">${caseUnits(c)}</td><td>${dueChip(c)}</td>
+      <td>${needSkills(c).map(k=>`<span class="chip skill">${esc(SKILLS.find(x=>x[0]===k)[1])}</span>`).join(' ')}</td>
+      <td><select data-assign="${c.id}" aria-label="Technician for ${esc(c.no)}"><option value="">—</option>${S.techs.filter(t=>canDo(t,c)).map(t=>`<option value="${t.id}" ${s&&s.id===t.id?'selected':''}>${esc(t.name)} (${load(t.id)}/${t.cap})</option>`).join('')}</select></td></tr>`}).join('')}
+    </table></div>`:'<div class="empty">Every case in the lab has a technician.</div>'}</div>
+  <div class="panel" style="margin-top:16px"><h3>Skills and capacity</h3><p class="hint" style="margin-top:4px">Tick what each technician is signed off to do. Capacity is units per day.</p>
+    <div class="tbl" style="margin-top:8px"><table><tr><th>Technician</th>${SKILLS.map(s=>`<th class="c">${esc(s[1])}</th>`).join('')}<th class="r">Capacity</th><th>Today</th></tr>
+    ${S.techs.map(t=>{const l=load(t.id);return `<tr><td>${esc(t.name)}</td>${SKILLS.map(s=>`<td class="c"><input type="checkbox" data-skill="${t.id}:${s[0]}" ${t.skills.includes(s[0])?'checked':''} aria-label="${esc(t.name)} ${esc(s[1])}"></td>`).join('')}
+      <td class="r"><input type="number" min="1" max="60" data-cap="${t.id}" value="${t.cap}" aria-label="${esc(t.name)} capacity"></td><td><div class="meter ${l>t.cap?'over':''}"><i style="width:${Math.min(100,l/t.cap*100)}%"></i></div><span class="muted" style="font-size:.76rem">${l}/${t.cap}</span></td></tr>`}).join('')}
+    </table></div></div>`;
+};
+
 /* --- bench --- */
-let benchTech='t3';
+let benchTech='t5';
 V.bench=()=>{
   const me=tech(benchTech);
-  const q=S.cases.filter(c=>c.stage<5&&owner(c)===benchTech).sort((a,b)=>(b.rush-a.rush)||a.due.localeCompare(b.due));
+  const q=S.cases.filter(c=>active(c)&&owner(c)===benchTech).sort((a,b)=>(b.rush-a.rush)||a.due.localeCompare(b.due));
   const open=S.clock.find(k=>k.techId===benchTech&&!k.out);
   const hrs=S.clock.filter(k=>k.techId===benchTech&&k.in.slice(0,10)===TODAY).reduce((s,k)=>s+((k.out?new Date(k.out):new Date())-new Date(k.in))/36e5,0);
   const wkStart=addDays(TODAY,-((new Date(TODAY+'T00:00').getDay()+6)%7));
   const earned=S.pay.filter(p=>p.techId===benchTech&&p.date>=wkStart).reduce((s,p)=>s+p.amount,0);
   return `
-  <div class="viewhead"><div><h2>Bench</h2><p>What a technician sees on their phone or the bench tablet: their own queue, a time clock, and piece-rate pay credited the moment they close a stage.</p></div></div>
+  <div class="viewhead"><div><h2>Bench</h2><p>A technician's own queue on a phone or bench tablet. Optional — the paper slip still works for anyone who prefers it.</p></div></div>
   <div class="techs" role="group" aria-label="Technician">${S.techs.map(t=>`<button data-act="tech" data-id="${t.id}" aria-pressed="${t.id===benchTech}">${esc(t.name)}</button>`).join('')}</div>
   <div class="phone">
-    <div class="head"><small>${esc(me.role)}</small><h3>${esc(me.name)}</h3><div style="font-size:.85rem;opacity:.8">${q.length} case${q.length===1?'':'s'} in your queue</div></div>
+    <div class="head"><small>${esc(me.skills.map(k=>SKILLS.find(s=>s[0]===k)[1]).join(' · '))}</small><h3>${esc(me.name)}</h3><div style="font-size:.85rem;opacity:.8">${q.length} case${q.length===1?'':'s'} · ${load(me.id)} of ${me.cap} units today</div></div>
     <div class="kpis">
       <div class="kpi"><b class="tnum">${hrs.toFixed(1)} h</b><span>${open?'Clocked in since '+new Date(open.in).toLocaleTimeString('en-AU',{hour:'numeric',minute:'2-digit'}):'Not clocked in'}</span></div>
       <div class="kpi"><b class="tnum">${money(earned)}</b><span>Piece pay this week</span></div>
     </div>
     <button class="btn ${open?'':'pri'}" style="width:100%;margin-bottom:12px" data-act="clock">${open?'Clock out':'Clock in'}</button>
-    <div class="qlist">${q.map(c=>{const it=c.items[0];return `<div class="qitem">
-      <div style="display:flex;justify-content:space-between;gap:8px"><span class="mono muted">${esc(c.no)}</span>${dueChip(c)}</div>
-      <b>${esc(itemLabel(it))} ${it.teeth.length?'<span class="mono muted">'+esc(teethTxt(it))+'</span>':''}</b>
+    <div class="qlist">${q.map(c=>{const it=c.items[0],k=STAGES[c.stage].k;return `<div class="qitem">
+      <div style="display:flex;justify-content:space-between;gap:8px"><span class="mono muted">${esc(c.no)} · ${esc(SN(c.stage))}</span>${dueChip(c)}</div>
+      <b>${esc(itemLabel(it))} <span class="mono muted">${esc(teethTxt(it))}</span></b>
       <div class="muted" style="font-size:.85rem">${esc(c.patient)} · ${esc(c.dentist)} ${it.shade?' · ':''}${shadeChip(it.shade)}</div>
       ${c.notes?`<div style="font-size:.85rem">${esc(c.notes)}</div>`:''}
-      <button class="btn pri sm" data-act="benchdone" data-id="${c.id}">${c.stage===4?'Pass QC and dispatch':'Done — send to '+STAGES[c.stage+1]}${PIECE[c.stage]?' (+'+money(PIECE[c.stage]*c.items.reduce((s,i)=>s+units(i),0))+')':''}</button>
-    </div>`}).join('')||'<div class="empty">Queue clear. Nice work.</div>'}</div>
+      <button class="btn pri sm" data-act="benchdone" data-id="${c.id}">${advLabel(c)}${PIECE[k]?' (+'+money(PIECE[k]*caseUnits(c))+')':''}</button>
+    </div>`}).join('')||'<div class="empty">Queue clear.</div>'}</div>
   </div>`;
 };
 
@@ -527,47 +728,57 @@ V.portal=()=>{
   const cs=S.cases.filter(c=>c.practiceId===p.id).sort((a,b)=>a.stage-b.stage||a.due.localeCompare(b.due));
   const inv=S.invoices.filter(i=>i.practiceId===p.id).sort((a,b)=>b.date.localeCompare(a.date));
   const bal=inv.filter(i=>!i.paid).reduce((s,i)=>s+invTotal(i).total,0);
+  charts.po=charts.po||new Set();
   return `
-  <div class="viewhead"><div><h2>Dentist portal</h2><p>The login each practice gets, carrying your lab's name. Switch practice to see what each one sees.</p></div><span class="sp"></span>
+  <div class="viewhead"><div><h2>Dentist portal</h2><p>What each practice sees when they log in. Booking starts with the tooth chart, so the units and the turnaround are worked out for them.</p></div><span class="sp"></span>
     <select id="pp" class="iconbtn" aria-label="Practice">${S.practices.map(x=>`<option value="${x.id}" ${x.id===p.id?'selected':''}>${esc(x.name)}</option>`).join('')}</select></div>
   <div class="portalhead"><div><div class="mono muted">${esc(S.lab.name)} · Practice portal</div><h2>${esc(p.name)}</h2></div><div><div class="muted" style="font-size:.85rem">Account balance</div><b style="font-family:var(--display);font-size:1.4rem" class="tnum">${money(bal)}</b></div></div>
   <div class="grid2">
-    <div class="panel"><h3>Your cases</h3>
-      ${cs.map(c=>`<div class="pcase"><div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap"><b>${esc(c.patient)} — ${esc(itemLabel(c.items[0]))}</b>${c.stage===5?'<span class="chip good">Dispatched '+fmtD(lastMove(c))+'</span>':'<span class="chip">Back '+fmtD(c.due)+'</span>'}</div>
-        <div class="muted" style="font-size:.84rem">${esc(c.no)} · ${esc(c.dentist)} · ${esc(STAGES[c.stage])}</div>
-        <div class="track">${STAGES.map((s,i)=>`<span class="${i<c.stage||c.stage===5?'done':i===c.stage?'now':''}"></span>`).join('')}</div></div>`).join('')||'<div class="empty">No cases yet.</div>'}
-    </div>
+    <div class="panel"><h3>Book a case</h3>
+      <form id="portalform" class="form" style="margin-top:12px" novalidate>
+        <div class="field"><label for="po-d">Dentist</label><select id="po-d">${p.dentists.map(n=>`<option>${esc(n)}</option>`).join('')}</select></div>
+        <div class="field"><label for="po-p">Patient</label><input id="po-p" data-quote="po"></div>
+        <div class="field full"><label for="po-c">Restoration</label><select id="po-c" data-quote="po">${Object.entries(CATALOG).map(([k,v])=>`<option value="${k}">${esc(v.name)} — ${money(v.price*(1-p.disc/100))} per ${v.unit}</option>`).join('')}</select></div>
+        <div class="field full"><label>Teeth — tap each tooth being restored</label>${chartHtml('po',[...charts.po])}<div class="quote" id="quote-po"></div></div>
+        <div class="field"><label for="po-s">Shade</label><select id="po-s" data-quote="po"><option value="">Choose shade</option>${Object.keys(SHADES).map(s=>`<option>${s}</option>`).join('')}</select></div>
+        <div class="field"><label for="po-due">Seat appointment</label><input id="po-due" type="date"></div>
+        <div class="field full"><label for="po-n">Notes</label><input id="po-n" data-quote="po" placeholder="Implant system, prep notes, anything the bench should know"></div>
+        <div class="field full" id="miss-po"></div>
+        <div class="field full"><button class="btn pri" type="submit">Book with the lab</button></div>
+      </form></div>
     <div style="display:flex;flex-direction:column;gap:16px;min-width:0">
-      <div class="panel"><h3>Send a new case</h3>
-        <form id="portalform" class="form" style="margin-top:12px">
-          <div class="field"><label for="po-d">Dentist</label><select id="po-d">${p.dentists.map(n=>`<option>${esc(n)}</option>`).join('')}</select></div>
-          <div class="field"><label for="po-p">Patient</label><input id="po-p" required></div>
-          <div class="field"><label for="po-c">Restoration</label><select id="po-c">${Object.entries(CATALOG).map(([k,v])=>`<option value="${k}">${esc(v.name)} — ${money(v.price*(1-p.disc/100))}</option>`).join('')}</select></div>
-          <div class="field"><label for="po-t">Teeth (FDI)</label><input id="po-t" placeholder="e.g. 21"></div>
-          <div class="field"><label for="po-s">Shade</label><select id="po-s"><option value="">None</option>${Object.keys(SHADES).map(s=>`<option>${s}</option>`).join('')}</select></div>
-          <div class="field"><label for="po-due">Needed by</label><input id="po-due" type="date" value="${addDays(TODAY,7)}"></div>
-          <div class="field full"><label for="po-n">Notes</label><input id="po-n"></div>
-          <div class="field full"><button class="btn pri" type="submit">Send to lab</button></div>
-        </form></div>
+      <div class="panel"><h3>Your cases</h3>
+      ${cs.map(c=>`<div class="pcase"><div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap"><b>${esc(c.patient)} — ${esc(itemLabel(c.items[0]))}</b>${c.stage===DONE?'<span class="chip good">Dispatched '+fmtD(lastMove(c))+'</span>':'<span class="chip">Back '+fmtD(c.due)+'</span>'}</div>
+        <div class="muted" style="font-size:.84rem">${esc(c.no)} · ${esc(c.dentist)} · ${c.stage===0?'Booked — waiting for the box':esc(SN(c.stage))}</div>
+        <div class="track">${STAGES.map((s,i)=>`<span class="${i<c.stage||c.stage===DONE?'done':i===c.stage?'now':''}"></span>`).join('')}</div></div>`).join('')||'<div class="empty">No cases yet.</div>'}</div>
       <div class="panel"><h3>Invoices</h3><div class="tbl"><table><tr><th>Invoice</th><th>Date</th><th class="r">Total</th><th>Status</th></tr>
         ${inv.map(i=>`<tr><td class="mono">${esc(i.no)}</td><td>${fmtShort(i.date)}</td><td class="r">${money(invTotal(i).total)}</td><td>${i.paid?'<span class="chip good">Paid</span>':diff(TODAY,i.due)>0?'<span class="chip bad">Overdue</span>':'<span class="chip">Open</span>'}</td></tr>`).join('')||'<tr><td colspan="4" class="empty">No invoices</td></tr>'}
       </table></div></div>
     </div>
   </div>`;
 };
+function refreshPortal(){
+  if(!$('#quote-po'))return;
+  const code=$('#po-c').value, teeth=[...charts.po];
+  $('#quote-po').innerHTML=quoteHtml(code,teeth,false,addDays(TODAY,1));
+  const earliest=addWD(addDays(TODAY,1),turnaround(code,teeth,false).d), due=$('#po-due');
+  due.min=earliest; if(!due.value||due.value<earliest)due.value=earliest;
+  const m=missingFor({code,teeth,patient:$('#po-p').value.trim(),shade:$('#po-s').value,notes:$('#po-n').value});
+  $('#miss-po').innerHTML=m.length?`<div class="missing">Still needed: ${m.join(', ')}.</div>`:'<div class="missing ok">Ready to book.</div>';
+}
 
 /* --- billing --- */
 const invTotal=i=>{const ex=i.lines.reduce((s,l)=>s+l.qty*l.unit,0);const gst=Math.round(ex*10)/100;return {ex,gst,total:ex+gst}};
 const BUCKETS=['Current','31–60','61–90','90+'];
 const bucket=i=>{const a=diff(TODAY,i.date);return a<=30?0:a<=60?1:a<=90?2:3};
 V.billing=()=>{
-  const ready=S.cases.filter(c=>c.stage===5&&!c.invoiced);
+  const ready=S.cases.filter(c=>c.stage===DONE&&!c.invoiced);
   const byP=S.practices.map(p=>({p,cs:ready.filter(c=>c.practiceId===p.id)})).filter(x=>x.cs.length);
   const open=S.invoices.filter(i=>!i.paid);
   const aging=S.practices.map(p=>{const b=[0,0,0,0];open.filter(i=>i.practiceId===p.id).forEach(i=>b[bucket(i)]+=invTotal(i).total);return {p,b}});
   const tot=[0,1,2,3].map(k=>aging.reduce((s,a)=>s+a.b[k],0));
   return `
-  <div class="viewhead"><div><h2>Billing</h2><p>Dispatched work becomes GST invoices at each practice's prices. Remakes are credited automatically. Export to Xero as a sales-invoice import file.</p></div></div>
+  <div class="viewhead"><div><h2>Billing</h2><p>Dispatched work becomes GST invoices at each practice's prices, remakes credited, and goes to Xero as an import file. Xero stays the books.</p></div></div>
   <div class="grid2">
     <div class="panel"><h3>Ready to invoice</h3>
       ${byP.length?`<div class="tbl"><table><tr><th>Practice</th><th class="r">Cases</th><th class="r">Ex GST</th></tr>${byP.map(x=>`<tr><td>${esc(x.p.name)}</td><td class="r">${x.cs.length}</td><td class="r">${money(x.cs.reduce((s,c)=>s+caseTotal(c),0))}</td></tr>`).join('')}</table></div>
@@ -582,13 +793,13 @@ V.billing=()=>{
       <td>${i.paid?'<span class="chip good">Paid</span>':`<button class="btn sm" data-act="paid" data-id="${i.id}">Mark paid</button>`}</td></tr>`}).join('')}
   </table></div></div>
   <div class="grid2" style="margin-top:16px">
-    <div class="panel"><h3>Price book</h3><p class="hint" style="margin-top:4px">Lab list prices, ex GST. Each practice's discount applies to every item.</p>
-      <div class="tbl" style="margin-top:8px"><table><tr><th>Item</th><th>Per</th><th class="r">List price</th></tr>
-      ${Object.entries(CATALOG).map(([k,v])=>`<tr><td>${esc(v.name)}</td><td class="muted">${v.unit}</td><td class="r"><input type="number" step="5" min="0" data-price="${k}" value="${v.price}" aria-label="${esc(v.name)} price"></td></tr>`).join('')}</table></div>
-      <div class="tbl" style="margin-top:12px"><table><tr><th>Practice</th><th class="r">Discount %</th></tr>
-      ${S.practices.map(p=>`<tr><td>${esc(p.name)}</td><td class="r"><input type="number" min="0" max="50" data-disc="${p.id}" value="${p.disc}" aria-label="${esc(p.name)} discount"></td></tr>`).join('')}</table></div>
+    <div class="panel"><h3>Price book and turnaround</h3><p class="hint" style="margin-top:4px">List prices ex GST, and the working days each item takes. Extra units add a day per the last column.</p>
+      <div class="tbl" style="margin-top:8px"><table><tr><th>Item</th><th class="r">Price</th><th class="r">Days</th><th class="r">Units incl.</th><th class="r">+1 day per</th></tr>
+      ${Object.entries(CATALOG).map(([k,v])=>`<tr><td>${esc(v.name)} <span class="muted">/${v.unit}</span></td><td class="r"><input type="number" step="5" min="0" data-price="${k}" value="${v.price}" aria-label="${esc(v.name)} price"></td>${v.tat.map((n,j)=>`<td class="r"><input type="number" min="1" max="30" data-tat="${k}:${j}" value="${n}" style="width:3.5em" aria-label="${esc(v.name)} turnaround ${j}"></td>`).join('')}</tr>`).join('')}</table></div>
+      <div class="tbl" style="margin-top:12px"><table><tr><th>Practice</th><th>Books via</th><th class="r">Discount %</th></tr>
+      ${S.practices.map(p=>`<tr><td>${esc(p.name)}</td><td class="muted">${esc(p.booking)}</td><td class="r"><input type="number" min="0" max="50" data-disc="${p.id}" value="${p.disc}" aria-label="${esc(p.name)} discount"></td></tr>`).join('')}</table></div>
     </div>
-    <div class="panel"><h3>Xero export</h3><p class="hint" style="margin-top:4px">Open invoices in Xero's sales-invoice CSV layout, tax type "GST on Income", account ${esc(S.lab.acct)}. In Xero: Business › Invoices › Import.</p>
+    <div class="panel"><h3>Xero export</h3><p class="hint" style="margin-top:4px">Open invoices in Xero's sales-invoice CSV layout, tax type "GST on Income", account ${esc(S.lab.acct)}.</p>
       <div class="field" style="margin-top:8px"><label for="xero">CSV</label><textarea id="xero" rows="12" class="rx" readonly>${esc(xeroCsv())}</textarea></div>
       <div class="actions" style="margin-top:8px"><button class="btn" data-act="copyxero">Copy CSV</button></div></div>
   </div>`;
@@ -596,13 +807,13 @@ V.billing=()=>{
 function xeroCsv(){
   const q=v=>/[",\n]/.test(String(v))?'"'+String(v).replace(/"/g,'""')+'"':v;
   const rows=[['*ContactName','EmailAddress','*InvoiceNumber','*InvoiceDate','*DueDate','Description','*Quantity','*UnitAmount','*AccountCode','*TaxType','Currency']];
-  S.invoices.filter(i=>!i.paid).forEach(i=>{const p=prac(i.practiceId);i.lines.forEach(l=>rows.push([p.name,p.email,i.no,fmtShort(i.date),fmtShort(i.due),l.desc,l.qty,l.unit.toFixed(2),S.lab.acct,'GST on Income','AUD']))});
+  S.invoices.filter(i=>!i.paid).forEach(i=>{const p=prac(i.practiceId);i.lines.forEach(l=>rows.push([p.name,p.email,i.no,fmtShort(i.date),fmtShort(i.due),l.desc,l.qty,(+l.unit).toFixed(2),S.lab.acct,'GST on Income','AUD']))});
   return rows.map(r=>r.map(q).join(',')).join('\n');
 }
 function invoiceAll(){
-  const ready=S.cases.filter(c=>c.stage===5&&!c.invoiced);let n=0;
+  const ready=S.cases.filter(c=>c.stage===DONE&&!c.invoiced);let n=0;
   S.practices.forEach(p=>{const cs=ready.filter(c=>c.practiceId===p.id);if(!cs.length)return;
-    const lines=[];cs.forEach(c=>c.items.forEach(it=>lines.push({desc:`${c.no} ${c.patient} — ${itemLabel(it)}${it.teeth.length?' ('+it.teeth.join(', ')+')':''}${c.remake?' — remake, no charge':''}`,qty:units(it),unit:priceFor(c,it)})));
+    const lines=[];cs.forEach(c=>c.items.forEach(it=>lines.push({desc:`${c.no} ${c.patient} — ${itemLabel(it)} (${teethTxt(it)})${c.remake?' — remake, no charge':''}`,qty:units(it),unit:priceFor(c,it)})));
     S.invoices.push({id:uid(),no:'INV-'+(S.inv++),practiceId:p.id,date:TODAY,due:addDays(TODAY,30),paid:false,lines});
     cs.forEach(c=>c.invoiced=true);n++});
   save();toast(n+' invoice'+(n===1?'':'s')+' created');
@@ -616,74 +827,94 @@ function openSettings(){
      <div class="field full"><label for="ln">Lab name</label><input id="ln" value="${esc(L.name)}"></div>
      <div class="field"><label for="la">ABN</label><input id="la" value="${esc(L.abn)}"></div>
      <div class="field"><label for="lc">Xero sales account code</label><input id="lc" value="${esc(L.acct)}"></div>
-     <div class="field full"><label for="ld">Address (printed on TGA statements)</label><input id="ld" value="${esc(L.addr)}"></div>
+     <div class="field full"><label for="ld">Address (printed on lab slips and TGA statements)</label><input id="ld" value="${esc(L.addr)}"></div>
      <div class="field full"><button class="btn pri" type="submit">Save settings</button></div></form>
-   <div class="sect"><h4>Demo data</h4><p class="hint">Everything in this prototype is example data saved in this browser only.</p>
+   <div class="sect"><h4>Demo data</h4><p class="hint">Everything here is example data saved in this browser only.</p>
    <div class="actions" style="margin-top:8px"><button class="btn" data-act="reset">Reset example data</button></div></div>`;
   $('#dlg').showModal();
 }
 
 /* ---------- router & events ---------- */
-const ROUTES=['board','intake','bench','portal','billing'];
+const ROUTES=['board','intake','allocation','bench','portal','billing'];
 function render(){
   let r=location.hash.slice(1); if(!ROUTES.includes(r))r='board';
   document.querySelectorAll('#tabs a').forEach(a=>{if(a.getAttribute('href')==='#'+r)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')});
   $('#labname').textContent='· '+S.lab.name;
   $('#view').innerHTML=V[r]();
+  if(r==='intake')refreshIntake(true);
+  if(r==='portal')refreshPortal();
 }
 window.addEventListener('hashchange',render);
+function copy(txt,msg){navigator.clipboard.writeText(txt).then(()=>toast(msg)).catch(()=>toast('Select the text and copy it'))}
 
 document.addEventListener('click',e=>{
   const b=e.target.closest('[data-act]');if(!b)return;
   const a=b.dataset.act,id=b.dataset.id,c=id&&caseById(id);
   if(a==='open')openCase(id);
   else if(a==='close')$('#dlg').close();
-  else if(a==='advance'){advance(c);render();openCase(id);toast(c.stage===5?'Dispatched':'Moved to '+STAGES[c.stage])}
-  else if(a==='back'){c.stage--;c.history.push({d:TODAY,stage:c.stage,who:'Lab',txt:'Sent back to '+STAGES[c.stage]});save();render();openCase(id)}
+  else if(a==='slip')openSlip(id);
+  else if(a==='tooth'){const set=charts[b.dataset.chart],t=+b.dataset.t;set.has(t)?set.delete(t):set.add(t);b.setAttribute('aria-pressed',set.has(t));b.dataset.chart==='in'?refreshIntake():refreshPortal()}
+  else if(a==='advance'){advance(c);render();openCase(id);toast(c.stage===DONE?'Dispatched':c.stage===1?'Checked in':'Moved to '+SN(c.stage))}
+  else if(a==='back'){c.stage--;c.history.push({d:TODAY,stage:c.stage,who:'Lab',txt:'Sent back to '+SN(c.stage)});save();render();openCase(id)}
   else if(a==='remake'){c.remake=!c.remake;c.history.push({d:TODAY,stage:c.stage,who:'Lab',txt:c.remake?'Flagged as remake — no charge':'Remake flag cleared'});save();render();openCase(id)}
+  else if(a==='takesug'){c.assigned[c.stage]=b.dataset.t;save();render();openCase(id);toast('Assigned to '+tech(b.dataset.t).name)}
   else if(a==='tga'){$('#tgaout').innerHTML=`<div class="sect"><h4>TGA custom-made device statement</h4><pre class="doc" id="tgatxt">${esc(tgaText(c))}</pre><div class="actions" style="margin-top:8px"><button class="btn sm" data-act="copytga">Copy statement</button></div></div>`;$('#tgaout').scrollIntoView({behavior:'smooth'})}
   else if(a==='copytga')copy($('#tgatxt').textContent,'Statement copied');
-  else if(a==='sample'){draft={raw:RX_SAMPLES[+b.dataset.i].txt};render()}
+  else if(a==='copyask')copy(askText(),'Request copied — paste it into your reply');
+  else if(a==='sample'){draft={raw:RX_SAMPLES[+b.dataset.i].txt,teeth:[]};render()}
   else if(a==='read'){const raw=$('#rxtxt').value.trim();if(!raw){toast('Paste an Rx first');return}draft=parseRx(raw);render();toast(draft.found.length+' fields read — check before creating')}
+  else if(a==='assignall'){let n=0;S.cases.filter(c=>active(c)&&!owner(c)).sort((a,b)=>a.due.localeCompare(b.due)).forEach(c=>{const s=suggest(c);if(s){c.assigned[c.stage]=s.id;n++}});save();render();toast(n+' cases assigned')}
   else if(a==='tech'){benchTech=id;render()}
   else if(a==='clock'){const o=S.clock.find(k=>k.techId===benchTech&&!k.out);if(o)o.out=new Date().toISOString();else S.clock.push({techId:benchTech,in:new Date().toISOString()});save();render();toast(o?'Clocked out':'Clocked in')}
-  else if(a==='benchdone'){advance(c,tech(benchTech).name);render();toast('Sent on — pay credited')}
+  else if(a==='benchdone'){advance(c,tech(benchTech).name);render();toast('Sent on')}
   else if(a==='invoiceall'){invoiceAll();render()}
-  else if(a==='paid'){const i=S.invoices.find(x=>x.id===id);i.paid=true;i.paidDate=TODAY;save();render();toast(i.no+' marked paid')}
+  else if(a==='paid'){const i=S.invoices.find(x=>x.id===id);i.paid=true;save();render();toast(i.no+' marked paid')}
   else if(a==='copyxero')copy($('#xero').value,'CSV copied');
   else if(a==='settings')openSettings();
-  else if(a==='reset'){S=seed();save();draft=null;$('#dlg').close();render();toast('Example data reset')}
+  else if(a==='reset'){S=seed();save();draft=null;charts.po=new Set();$('#dlg').close();render();toast('Example data reset')}
 });
-function copy(txt,msg){navigator.clipboard.writeText(txt).then(()=>toast(msg)).catch(()=>toast('Select the text and copy it'))}
 document.addEventListener('input',e=>{
   const t=e.target;
   if(t.id==='q'){filt.q=t.value;const pos=t.selectionStart;render();const n=$('#q');n.focus();n.setSelectionRange(pos,pos)}
-  if(t.dataset.price){CATALOG[t.dataset.price].price=+t.value||0;S.prices=Object.fromEntries(Object.entries(CATALOG).map(([k,v])=>[k,v.price]));save()}
+  if(t.dataset.price){CATALOG[t.dataset.price].price=+t.value||0;saveCatalog()}
+  if(t.dataset.tat){const [k,j]=t.dataset.tat.split(':');CATALOG[k].tat[+j]=Math.max(1,+t.value||1);saveCatalog()}
   if(t.dataset.disc){prac(t.dataset.disc).disc=+t.value||0;save()}
+  if(t.dataset.cap){tech(t.dataset.cap).cap=Math.max(1,+t.value||1);save()}
+  if(t.dataset.quote==='in'&&t.tagName==='INPUT')refreshIntake(true);
+  if(t.dataset.quote==='po'&&t.tagName==='INPUT')refreshPortal();
 });
+function saveCatalog(){S.prices=Object.fromEntries(Object.entries(CATALOG).map(([k,v])=>[k,v.price]));S.tats=Object.fromEntries(Object.entries(CATALOG).map(([k,v])=>[k,v.tat]));save()}
+if(S.tats)Object.entries(S.tats).forEach(([k,v])=>{if(CATALOG[k])CATALOG[k].tat=v});
 document.addEventListener('change',e=>{
   const t=e.target;
   if(t.id==='pf'){filt.p=t.value;render()}
-  if(t.id==='pp'){portalP=t.value;render()}
-  if(t.id==='fp'){const p=prac(t.value);$('#fd').innerHTML=p.dentists.map(n=>`<option>${esc(n)}</option>`).join('')}
-  if(t.id==='asg'){const c=caseById(t.dataset.id);c.assigned[c.stage]=t.value;save();render();toast('Assigned to '+tech(t.value).name)}
+  if(t.id==='pp'){portalP=t.value;charts.po=new Set();render()}
+  if(t.id==='fp'){const p=prac(t.value);$('#fd').innerHTML=p.dentists.map(n=>`<option>${esc(n)}</option>`).join('');refreshIntake(true)}
+  if(t.dataset.quote==='in'&&t.tagName==='SELECT')refreshIntake(t.id==='fs'?true:'reset');
+  if(t.dataset.quote==='po'&&t.tagName==='SELECT')refreshPortal();
+  if(t.id==='asg'){const c=caseById(t.dataset.id);if(t.value)c.assigned[c.stage]=t.value;else delete c.assigned[c.stage];save();render();openCase(c.id);toast(t.value?'Assigned to '+tech(t.value).name:'Unassigned')}
+  if(t.dataset.assign){const c=caseById(t.dataset.assign);if(t.value){c.assigned[c.stage]=t.value;save();render();toast(c.no+' assigned to '+tech(t.value).name)}}
+  if(t.dataset.skill){const [tid,k]=t.dataset.skill.split(':'),tt=tech(tid);tt.skills=t.checked?[...new Set([...tt.skills,k])]:tt.skills.filter(x=>x!==k);save();render()}
   if(t.id==='due2'){const c=caseById(t.dataset.id);c.due=t.value;save();render();openCase(c.id)}
-  if(t.dataset.price||t.dataset.disc)render();
+  if(t.dataset.photo&&t.files[0])addPhoto(t.dataset.photo,t.files[0]);
+  if(t.dataset.price||t.dataset.disc||t.dataset.cap||t.dataset.tat)render();
 });
-const teethIn=v=>(v.match(/\b[1-4][1-8]\b/g)||[]).map(Number);
+const nameOk=v=>v.trim().length>0;
 document.addEventListener('submit',e=>{
   e.preventDefault();const f=e.target;
   if(f.id==='caseform'){
-    const c=createCase({practiceId:$('#fp').value,dentist:$('#fd').value,patient:$('#fpt').value.trim(),code:$('#fc').value,teeth:teethIn($('#ft').value),shade:$('#fs').value,due:$('#fdue').value,rush:$('#fr').value==='1',notes:$('#fn').value,source:'email'});
-    draft=null;location.hash='board';render();openCase(c.id);toast(c.no+' created');
+    if(!nameOk($('#fpt').value)){toast('Add the patient name first');$('#fpt').focus();return}
+    const c=createCase({practiceId:$('#fp').value,dentist:$('#fd').value,patient:$('#fpt').value.trim(),code:$('#fc').value,teeth:[...charts.in].sort((a,b)=>a-b),shade:$('#fs').value,due:$('#fdue').value,rush:$('#fr').value==='1',notes:$('#fn').value,source:(draft&&draft.source)||'email',inHand:$('#fbox').value==='1'});
+    draft=null;location.hash='board';render();openSlip(c.id);toast(c.no+' created — lab slip ready');
   }
   if(f.id==='portalform'){
-    const p=prac(portalP);
-    const c=createCase({practiceId:p.id,dentist:$('#po-d').value,patient:$('#po-p').value.trim(),code:$('#po-c').value,teeth:teethIn($('#po-t').value),shade:$('#po-s').value,due:$('#po-due').value,notes:$('#po-n').value,source:'portal'});
-    render();toast(c.no+' sent to the lab');
+    const p=prac(portalP),code=$('#po-c').value,teeth=[...charts.po].sort((a,b)=>a-b);
+    const m=missingFor({code,teeth,patient:$('#po-p').value.trim(),shade:$('#po-s').value,notes:$('#po-n').value});
+    if(m.length){toast('Still needed: '+m.join(', '));return}
+    const c=createCase({practiceId:p.id,dentist:$('#po-d').value,patient:$('#po-p').value.trim(),code,teeth,shade:$('#po-s').value,due:$('#po-due').value,notes:$('#po-n').value,source:'portal',inHand:false});
+    charts.po=new Set();render();toast(c.no+' booked — back '+fmtD(c.due));
   }
   if(f.id==='labform'){Object.assign(S.lab,{name:$('#ln').value.trim()||'Your Dental Lab',abn:$('#la').value,acct:$('#lc').value,addr:$('#ld').value});save();$('#dlg').close();render();toast('Settings saved')}
 });
-if(S.prices)Object.entries(S.prices).forEach(([k,v])=>{if(CATALOG[k])CATALOG[k].price=v});
 render();
 </script>
