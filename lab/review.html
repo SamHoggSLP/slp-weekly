@@ -1,0 +1,254 @@
+<title>CDC Independent Review</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Benchline document style: concrete neutrals, blue-grey mosaic tile, pale aqua, charcoal. Thin tracked Lato for display, Instrument Sans for reading, mono for labels.
+   Layout: one reading column (~780px) of numbered sections; cover band in charcoal with a faint tile grid. Prints as A4 pages. */
+:root{
+  --bg:#e3e2df; --paper:#f4f4f2; --sunk:#e9e8e5; --ink:#2f2e2d; --muted:#686764; --line:#cbc9c4;
+  --tile:#a9c2d6; --tile-deep:#4c6c86; --tile-soft:#dfe8ef; --aqua:#b4d2d2; --aqua-soft:#e1eeee;
+  --char:#2f2e2d; --char-ink:#eceae6; --char-line:#454443;
+  --good:#2c6b4a; --good-bg:#dbe8dd; --warn:#8a5600; --warn-bg:#f3e6cc; --grey-bg:#e2e1de;
+  --display:"Lato","Helvetica Neue",system-ui,sans-serif;
+  --body:"Instrument Sans","Segoe UI",system-ui,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#262524; --paper:#2f2e2d; --sunk:#353433; --ink:#eceae6; --muted:#a8a6a2; --line:#474645;
+  --tile:#a3c0d6; --tile-deep:#b4d2d2; --tile-soft:#34414b; --aqua:#b4d2d2; --aqua-soft:#334142;
+  --char:#1d1c1b; --char-ink:#eceae6; --char-line:#3a3938;
+  --good:#8fd6b0; --good-bg:#2b3f33; --warn:#f0b75e; --warn-bg:#46391f; --grey-bg:#3d3c3b; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#262524; --paper:#2f2e2d; --sunk:#353433; --ink:#eceae6; --muted:#a8a6a2; --line:#474645;
+  --tile:#a3c0d6; --tile-deep:#b4d2d2; --tile-soft:#34414b; --aqua:#b4d2d2; --aqua-soft:#334142;
+  --char:#1d1c1b; --char-ink:#eceae6; --char-line:#3a3938;
+  --good:#8fd6b0; --good-bg:#2b3f33; --warn:#f0b75e; --warn-bg:#46391f; --grey-bg:#3d3c3b; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:16px/1.6 var(--body);-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.gut{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.col{max-width:820px;margin:0 auto}
+h1,h2,h3{font-family:var(--display);margin:0;text-wrap:balance;line-height:1.15}
+h2{font-weight:300;font-size:clamp(1.5rem,4vw,2.1rem);letter-spacing:.12em;text-transform:uppercase}
+h3{font-weight:700;font-size:1.1rem;letter-spacing:.01em}
+p{margin:0;max-width:68ch}
+.eyebrow{font:600 .72rem/1.4 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--tile-deep)}
+.lede{font-size:1.12rem;color:var(--ink)}
+.muted{color:var(--muted)}
+.tnum{font-variant-numeric:tabular-nums}
+
+/* cover */
+.cover{background-color:var(--char);color:var(--char-ink);
+  background-image:linear-gradient(var(--char-line) 1px,transparent 1px),linear-gradient(90deg,var(--char-line) 1px,transparent 1px);background-size:22px 22px;
+  margin-top:calc(-1 * env(safe-area-inset-top,0px));padding-top:calc(env(safe-area-inset-top,0px) + 4.5rem);padding-bottom:3rem}
+.cover .col{display:flex;flex-direction:column;gap:22px}
+.mark{display:grid;grid-template-columns:repeat(3,14px);gap:3px}
+.mark i{width:14px;height:14px;border-radius:2px;background:var(--tile)}
+.mark i:nth-child(even){background:var(--aqua)}
+.cover .eyebrow{color:var(--aqua)}
+.cover h1{font-weight:300;font-size:clamp(2.1rem,8vw,4.2rem);letter-spacing:.14em;text-transform:uppercase;line-height:1.05}
+.cover .sub{font-family:var(--display);font-weight:300;font-size:clamp(1.3rem,4vw,1.9rem);color:var(--aqua);letter-spacing:.04em}
+.cover p{color:var(--char-ink);opacity:.85;font-size:1.05rem}
+.meta{display:flex;flex-wrap:wrap;gap:20px 48px;border-top:1px solid var(--char-line);padding-top:20px;margin-top:28px;font-size:.92rem}
+.meta div span{display:block;font:600 .68rem var(--mono);letter-spacing:.16em;color:var(--aqua);text-transform:uppercase;margin-bottom:4px}
+
+/* sections */
+main{padding-block:12px 64px}
+section.sec{background:var(--paper);border:1px solid var(--line);border-radius:6px;margin-top:24px;padding:clamp(20px,4vw,40px);display:flex;flex-direction:column;gap:18px}
+.sechead{display:flex;flex-direction:column;gap:8px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));gap:10px}
+.stat{background:var(--sunk);border-top:4px solid var(--tile);padding:14px;border-radius:0 0 6px 6px}
+.stat b{display:block;font-family:var(--display);font-weight:300;font-size:2rem;line-height:1.1}
+.stat span{font-size:.84rem;color:var(--muted)}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:14px}
+.box{border:1px solid var(--line);border-radius:6px;padding:16px 18px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.box h4{margin:0;font:600 .72rem var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+ul.dots{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px}
+ul.dots li{padding-left:20px;position:relative}
+ul.dots li::before{content:"";position:absolute;left:0;top:.55em;width:9px;height:9px;border-radius:2px;background:var(--tile)}
+.rec{background-color:var(--char);color:var(--char-ink);border-radius:6px;padding:20px 22px;display:flex;flex-direction:column;gap:6px;
+  background-image:linear-gradient(var(--char-line) 1px,transparent 1px),linear-gradient(90deg,var(--char-line) 1px,transparent 1px);background-size:22px 22px}
+.rec .eyebrow{color:var(--aqua)}
+.rec p{font-family:var(--display);font-size:1.3rem;font-weight:400;max-width:none}
+
+/* status pills */
+.legend{display:flex;flex-wrap:wrap;gap:6px}
+.pill{display:inline-block;font:600 .74rem/1.3 var(--body);padding:3px 10px;border-radius:99px;white-space:nowrap}
+.s-solved{background:var(--good-bg);color:var(--good)}
+.s-mostly{background:var(--aqua-soft);color:var(--ink)}
+.s-partly{background:var(--warn-bg);color:var(--warn)}
+.s-tbc{background:var(--tile-soft);color:var(--tile-deep)}
+.s-not{background:var(--grey-bg);color:var(--muted)}
+
+/* tables */
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:6px}
+table{width:100%;border-collapse:collapse;font-size:.9rem;min-width:620px}
+th{text-align:left;font:600 .68rem var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);background:var(--sunk);padding:10px 12px;border-bottom:1px solid var(--line)}
+td{padding:12px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:0}
+td:first-child{font-weight:600}
+td small{display:block;font-weight:400;color:var(--muted);font-size:.8rem}
+tr.hl td{background:var(--tile-soft)}
+.note{border-left:4px solid var(--tile);background:var(--sunk);padding:14px 16px;border-radius:0 6px 6px 0;font-size:.94rem}
+.src{font-size:.86rem;color:var(--muted)}
+
+ol.asks{margin:0;padding-left:1.3em;columns:2 260px;column-gap:32px}
+ol.asks li{break-inside:avoid;margin-bottom:6px}
+.steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:14px}
+.steps li{display:grid;grid-template-columns:36px 1fr;gap:14px;align-items:start}
+.steps .n{width:36px;height:36px;border-radius:4px;background:var(--tile);color:#22303b;display:grid;place-items:center;font:600 .95rem var(--mono)}
+.steps li:nth-child(even) .n{background:var(--aqua)}
+.steps b{display:block}
+.sign{font-size:1.02rem}
+footer.fine{max-width:820px;margin:28px auto 0;font-size:.8rem;color:var(--muted);border-top:1px solid var(--line);padding-top:12px}
+
+@media print{
+  @page{size:A4;margin:14mm}
+  body{background:#fff}
+  .cover{height:262mm;margin:0;padding:55mm 12mm 12mm;break-after:page;overflow:hidden}
+  .cover .meta{margin-top:70mm}
+  .cover .gut{padding:0}
+  body{font-size:12px;line-height:1.45}
+  table{font-size:11px} h3{break-after:avoid}
+  .col{max-width:none}
+  .gut{padding-left:0;padding-right:0}
+  main{padding:0}
+  section.sec{border:0;padding:0;margin:0;break-before:page;background:none;gap:12px}
+  h2{font-size:1.55rem}
+  .lede{font-size:1rem}
+  .stat b{font-size:1.55rem}
+  .rec p{font-size:1.1rem}
+  .box,.rec,.two,.stats,.steps li,.note{break-inside:avoid}
+  td{padding:6px 8px} th{padding:6px 8px}
+  footer.fine{max-width:none}
+  section.sec.keep{break-before:auto;margin-top:12mm}
+  .tbl{overflow:visible} table{min-width:0} tr{break-inside:avoid}
+}
+</style>
+
+<header class="cover">
+  <div class="gut"><div class="col">
+    <div class="mark" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="eyebrow">Independent review · November 2026</div>
+    <h1>Core Dental Ceramics</h1>
+    <div class="sub">Problems and solutions</div>
+    <p>An independent review of options, prepared for Gordon and Luke by Sam Hogg, November 2026.</p>
+    <div class="meta">
+      <div><span>Prepared for</span>Gordon Leggat and Luke Jacobs<br>Directors, Core Dental Ceramics</div>
+      <div><span>Prepared by</span>Sam Hogg</div>
+      <div><span>Date</span>November 2026</div>
+    </div>
+  </div></div>
+</header>
+
+<main class="gut"><div class="col">
+
+<section class="sec" id="summary">
+  <div class="sechead"><div class="eyebrow">01 · The one-page summary</div><h2>The short version</h2></div>
+  <p class="lede">CDC doesn't have a technology problem so much as a paperwork problem. Every job gets typed in three times, and the paper copy becomes the real record. Fix that one thing and most of the other headaches get smaller.</p>
+  <div class="stats">
+    <div class="stat"><b class="tnum">3×</b><span>Each job is typed in three times</span></div>
+    <div class="stat"><b class="tnum">1</b><span>Coordinator everything runs through</span></div>
+    <div class="stat"><b class="tnum">$30,000</b><span>Howll AI stage one quote, + GST</span></div>
+    <div class="stat"><b class="tnum">US$349</b><span>Casetop, about per month, no contract</span></div>
+  </div>
+  <div class="two">
+    <div class="box"><h4>The core problem</h4>
+      <p>A job is entered in Seazona, written on the dentist's slip, then retyped into a Word lab slip. The paper then sits on the floor with the work, so:</p>
+      <ul class="dots"><li>Seazona is out of date most of the time.</li><li>Cases are hard to find without walking the floor.</li><li>Everything runs through one coordinator, Roo.</li></ul></div>
+    <div class="box"><h4>The two main paths</h4>
+      <p><b>Howll AI</b> has quoted <b>$30,000 + GST</b> for a stage one custom build.</p>
+      <p><b>Casetop</b>, an off-the-shelf dental lab system, appears to solve most of the same problems for about <b>US$349 a month</b>, with no contract and a free trial.</p></div>
+  </div>
+  <h3>Why this matters</h3>
+  <p>Howll has correctly named the problems. The question is whether CDC needs to pay to build something new, or whether a product already built for dental labs can do the job for a fraction of the cost. Based on what's public, Casetop looks like it covers most of the list. The gaps (Xero invoicing, skill-based scheduling and Australian hosting) are real, and the questions have been put to Casetop.</p>
+  <p>Nothing here needs a quick decision. A trial costs nothing, runs alongside Seazona and will tell you more in a month than any proposal can.</p>
+  <div class="rec"><div class="eyebrow">Recommendation</div><p>Run a 30-day Casetop trial on real cases before signing anything with Howll.</p></div>
+</section>
+
+<section class="sec" id="problems">
+  <div class="sechead"><div class="eyebrow">02 · Problem and solution</div><h2>What Casetop fixes, and what it doesn't</h2></div>
+  <p>Each problem CDC has raised, matched against what Casetop says it does. Where something isn't confirmed, it says so.</p>
+  <div class="legend"><span class="pill s-solved">Solved</span><span class="pill s-mostly">Mostly solved</span><span class="pill s-partly">Partly solved</span><span class="pill s-tbc">To be confirmed</span><span class="pill s-not">Not a software problem</span></div>
+  <h3>Getting jobs in and keeping track of them</h3>
+  <div class="tbl"><table>
+    <tr><th>Problem</th><th>Casetop answer</th><th>Status</th><th>Notes</th></tr>
+    <tr><td>Jobs typed in three times</td><td>Its AI reads a photographed or emailed paper slip, or a dictated note, and creates the case for a tech to check.</td><td><span class="pill s-solved">Solved</span></td><td>The dentist portal also lets dentists enter jobs directly.</td></tr>
+    <tr><td>Retyping into a Word lab slip</td><td>Casetop prints its own lab slips and pan labels.</td><td><span class="pill s-solved">Solved</span></td><td>The Word slip goes away.</td></tr>
+    <tr><td>Booking errors (for example an 8-unit case entered as 3)</td><td>The AI reads teeth and units and shows how confident it is on each field. A tech confirms.</td><td><span class="pill s-mostly">Mostly solved</span></td><td>A person still checks.</td></tr>
+    <tr><td>Seazona out of date while paper is on the floor</td><td>Casetop becomes the single system, with case workflow timestamps and the responsible tech.</td><td><span class="pill s-solved">Solved</span></td><td>Only if CDC switches. Running both long term would recreate the problem.</td></tr>
+    <tr><td>Can't find a case without walking the floor</td><td>Case status is visible in the system.</td><td><span class="pill s-solved">Solved</span></td><td>As long as techs scan or update cases as they move. That's a habit change.</td></tr>
+    <tr><td>Dentists who won't use a portal</td><td>It reads whatever paper or email arrives.</td><td><span class="pill s-solved">Solved</span></td><td>This is Casetop's key difference.</td></tr>
+    <tr><td>Everything runs through one coordinator</td><td>Intake and status questions come off her plate.</td><td><span class="pill s-partly">Partly solved</span></td><td>She still checks AI-read cases and allocates work.</td></tr>
+  </table></div>
+</section>
+
+<section class="sec" id="floor">
+  <div class="sechead"><div class="eyebrow">02 · Problem and solution, continued</div><h2>Running the floor, money, privacy and the bigger picture</h2></div>
+  <div class="tbl"><table>
+    <tr><th>Problem</th><th>Casetop answer</th><th>Status</th><th>Notes</th></tr>
+    <tr><td>Allocating work across about 20 techs from memory</td><td>Casetop records the responsible tech.</td><td><span class="pill s-tbc">To be confirmed</span></td><td>Skill-based scheduling isn't confirmed. The question has been put to Casetop.</td></tr>
+    <tr><td>Turnaround and due dates wrong</td><td>It reads the due date from the slip.</td><td><span class="pill s-partly">Partly solved</span></td><td>Lead times by product are being checked with Casetop.</td></tr>
+    <tr><td>Invoicing in Xero</td><td>Casetop syncs with QuickBooks only.</td><td><span class="pill s-tbc">To be confirmed</span></td><td>To be resolved. The Xero roadmap has been asked about.</td></tr>
+    <tr><td>Scanner orders</td><td>Medit Link and DS Core connect directly. DEXIS and Shining 3D are listed as coming soon.</td><td><span class="pill s-partly">Partly solved</span></td><td>iTero comes in by email or upload.</td></tr>
+    <tr><td>Patient privacy</td><td>Stores minimal patient data (name or ID, teeth, shade, scans) and offers an Australian Data Processing Agreement.</td><td><span class="pill s-partly">Partly solved</span></td><td>Hosting is in the US, with Cloudflare, Anthropic and OpenAI as subprocessors. Australian hosting has been asked about.</td></tr>
+    <tr><td>Posterior work going to chairside milling and East Coast labs at about half the price</td><td>Not something software fixes.</td><td><span class="pill s-not">Not a software problem</span></td><td>It's pricing and strategy.</td></tr>
+    <tr><td>Luke designing on weekends</td><td>Not directly solved.</td><td><span class="pill s-not">Not a software problem</span></td><td>It's a capacity and staffing question.</td></tr>
+  </table></div>
+  <h3>Reading the table</h3>
+  <div class="two">
+    <div class="box"><h4>Where Casetop looks strong</h4><ul class="dots"><li>Getting jobs in once, from paper, email or a dictated note.</li><li>Getting rid of the Word lab slip.</li><li>One up-to-date record, if CDC fully switches.</li><li>Dentists don't have to change how they send work.</li></ul></div>
+    <div class="box"><h4>What still needs an answer</h4><ul class="dots"><li>Skill-based allocation across the techs.</li><li>Lead times by product.</li><li>Xero invoicing.</li><li>Australian hosting for patient data.</li></ul></div>
+  </div>
+  <p>The last two rows matter, but no system will fix them. They're worth a separate conversation between Gordon and Luke.</p>
+</section>
+
+<section class="sec" id="options">
+  <div class="sechead"><div class="eyebrow">03 · Options compared</div><h2>Five ways forward</h2></div>
+  <p>Howll's prices are in AUD plus GST. All other prices are in USD.</p>
+  <div class="tbl"><table>
+    <tr><th>Option</th><th>Cost</th><th>What it covers</th><th>Lock-in</th><th>Risk</th></tr>
+    <tr><td>A. Howll AI stage one<small>Custom build</small></td><td>$30,000 + GST. A 10% deposit ($3,000 + GST), then four payments of $6,750 + GST. Plus $250 + GST a month support after the first 30 days.</td><td>Intake form with a tooth chart, a Seazona connection, generated lab slips and a job record. Excludes floor tracking, scheduling and invoicing.</td><td>Partner commitment gives Howll first option on the wider system. Ownership wording is unclear, and a sentence is cut off in the PDF.</td><td>No timeline given. Quote dated 27 Oct 2026 and valid for 30 days.</td></tr>
+    <tr><td>B. Howll mapping and prototype<small>Howll's original proposal</small></td><td>$7,500 + GST</td><td>A process map, a clickable prototype and a costed build scope.</td><td>Low. CDC owns the outputs.</td><td>Gives you a plan, not working software.</td></tr>
+    <tr><td>C. Seazona-first<small>Use what you have</small></td><td>Professional US$129/m (12 lab users). 24-user plan US$249/m. CDC may already pay for some of this.</td><td>Doctor portal, barcoded slips, tech portal, workflows by department, lead times by product, scanner intake (iTero, Dexis, Medit, DS Core, Shining 3D).</td><td>None new. You're already on it.</td><td>Doesn't read paper slips. Its REST API can create and read orders, but has no webhooks, no endpoint to update status or reassign, and no MCP server.</td></tr>
+    <tr class="hl"><td>D. Casetop<small>Off-the-shelf lab system</small></td><td>About US$349/m for 11 to 25 techs, billed in fixed AUD.</td><td>Most of the problem list (see section 02). Seazona import and side-by-side running. REST API and webhooks on every plan.</td><td>No contract. 30-day free trial.</td><td>Xero, Australian hosting and scheduling still to be confirmed.</td></tr>
+    <tr><td>E. Light AI layer<small>For example a Grok Bot setup</small></td><td>Cheap</td><td>AI intake of emailed or photographed slips feeding Seazona through its API, a job tracker, and daily due and late lists.</td><td>Low. Flexible.</td><td>Less polished. Data handling needs care.</td></tr>
+  </table></div>
+  <p class="src">Casetop's Seazona switching page: casetop.io/switch-from-seazona</p>
+  <div class="note"><b>Also looked at.</b> EviSmart LMS, Labtrac, Magic Touch, 3Shape LMS, Labnext, and the Australian-made LabMagic and iDentalLab. CareStack came up too, but it's software for dental practices, not labs, so it's not suitable.</div>
+</section>
+
+<section class="sec" id="howll">
+  <div class="sechead"><div class="eyebrow">04 · A note on the Howll quote</div><h2>Fair, but ask before you sign</h2></div>
+  <p>Howll is a real Perth business and the problems it identified are genuine. The original $7,500 step was sensible: map the process first, then price the build. The revised quote landed exactly at CDC's $30k cap by leaving out the hardest part (scheduling) and trading the discount for partner rights. If you do go ahead, ask for these first:</p>
+  <ol class="asks">
+    <li>Ownership of the system and code, in writing.</li>
+    <li>A clear definition of the partner commitment.</li>
+    <li>Milestones and a timeline up front.</li>
+    <li>Exactly what the Seazona API connection will cover.</li>
+    <li>The full terms, including the cut-off sentence.</li>
+    <li>Referees with live systems you can talk to.</li>
+    <li>A written extension of the quote, if you need more time.</li>
+  </ol>
+</section>
+
+<section class="sec keep" id="flexible">
+  <div class="sechead"><div class="eyebrow">05 · Why not lock in now</div><h2>Stay flexible while AI tools move fast</h2></div>
+  <p>AI tools are moving fast. Something that costs $30,000 to build today may be a standard feature in an off-the-shelf product next year. It's better to stay month to month, own your process map, and avoid long lock-ins. That keeps CDC free to switch as better options turn up.</p>
+</section>
+
+<section class="sec keep" id="next">
+  <div class="sechead"><div class="eyebrow">06 · Recommended next steps</div><h2>What to do from here</h2></div>
+  <ol class="steps">
+    <li><span class="n">1</span><div><b>Talk to Howll without pressure</b>Ask for a written extension, or let the quote lapse.</div></li>
+    <li><span class="n">2</span><div><b>Wait on Casetop's answers</b>Sam emailed the open questions on 26 Nov 2026.</div></li>
+    <li><span class="n">3</span><div><b>Run a 30-day Casetop trial</b>Use real cases, side by side with Seazona.</div></li>
+    <li><span class="n">4</span><div><b>Check the Seazona portal</b>Find out how many dentists already use it.</div></li>
+    <li><span class="n">5</span><div><b>Build only for the gaps</b>Revisit a custom build only for what's left, such as scheduling and Xero.</div></li>
+  </ol>
+  <p class="sign">Happy to talk any of this through over a coffee or a beer. <b>Sam</b></p>
+</section>
+
+<footer class="fine">Independent review, not legal or financial advice. Vendor details are taken from public websites as at November 2026. Casetop answers are pending. Prepared by Sam Hogg, November 2026.</footer>
+</div></main>
